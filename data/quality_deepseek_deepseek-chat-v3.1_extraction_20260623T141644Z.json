@@ -1,0 +1,140 @@
+{
+  "model": "deepseek/deepseek-chat-v3.1",
+  "utc": "20260623T141644Z",
+  "probe_set": "extraction",
+  "results": [
+    {
+      "provider": "DeepInfra",
+      "quant": "fp4",
+      "price_1m": 0.5,
+      "accuracy": null,
+      "availability": 0.0,
+      "served": 0,
+      "failed": 15,
+      "status": {
+        "ok": 0,
+        "ok_after_retry": 0,
+        "rate_limit": 3,
+        "server": 0,
+        "timeout": 0,
+        "client": 0
+      },
+      "mean_latency": null,
+      "spent_usd": 0.0
+    },
+    {
+      "provider": "Novita",
+      "quant": "fp8",
+      "price_1m": 0.635,
+      "accuracy": 1.0,
+      "availability": 1.0,
+      "served": 15,
+      "failed": 0,
+      "status": {
+        "ok": 15,
+        "ok_after_retry": 0,
+        "rate_limit": 0,
+        "server": 0,
+        "timeout": 0,
+        "client": 0
+      },
+      "mean_latency": 2.13,
+      "spent_usd": 0.000133
+    },
+    {
+      "provider": "SiliconFlow",
+      "quant": "fp8",
+      "price_1m": 0.635,
+      "accuracy": 1.0,
+      "availability": 1.0,
+      "served": 15,
+      "failed": 0,
+      "status": {
+        "ok": 15,
+        "ok_after_retry": 0,
+        "rate_limit": 0,
+        "server": 0,
+        "timeout": 0,
+        "client": 0
+      },
+      "mean_latency": 2.73,
+      "spent_usd": 0.000319
+    },
+    {
+      "provider": "AtlasCloud",
+      "quant": "fp8",
+      "price_1m": 0.625,
+      "accuracy": 1.0,
+      "availability": 1.0,
+      "served": 15,
+      "failed": 0,
+      "status": {
+        "ok": 15,
+        "ok_after_retry": 0,
+        "rate_limit": 0,
+        "server": 0,
+        "timeout": 0,
+        "client": 0
+      },
+      "mean_latency": 14.81,
+      "spent_usd": 0.000141
+    },
+    {
+      "provider": "WandB",
+      "quant": "fp8",
+      "price_1m": 1.1,
+      "accuracy": 0.9333333333333333,
+      "availability": 1.0,
+      "served": 15,
+      "failed": 0,
+      "status": {
+        "ok": 15,
+        "ok_after_retry": 0,
+        "rate_limit": 0,
+        "server": 0,
+        "timeout": 0,
+        "client": 0
+      },
+      "mean_latency": 0.43,
+      "spent_usd": 0.000285
+    },
+    {
+      "provider": "Google",
+      "quant": "unknown",
+      "price_1m": 1.15,
+      "accuracy": 1.0,
+      "availability": 1.0,
+      "served": 15,
+      "failed": 0,
+      "status": {
+        "ok": 15,
+        "ok_after_retry": 0,
+        "rate_limit": 0,
+        "server": 0,
+        "timeout": 0,
+        "client": 0
+      },
+      "mean_latency": 5.01,
+      "spent_usd": 0.000376
+    },
+    {
+      "provider": "SambaNova",
+      "quant": "fp8",
+      "price_1m": 1.0750000000000002,
+      "accuracy": 1.0,
+      "availability": 1.0,
+      "served": 15,
+      "failed": 0,
+      "status": {
+        "ok": 15,
+        "ok_after_retry": 0,
+        "rate_limit": 0,
+        "server": 0,
+        "timeout": 0,
+        "client": 0
+      },
+      "mean_latency": 1.42,
+      "spent_usd": 0.00028
+    }
+  ]
+}

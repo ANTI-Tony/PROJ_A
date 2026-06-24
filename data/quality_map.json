@@ -1,0 +1,977 @@
+{
+  "deepseek/deepseek-chat-v3.1": {
+    "classification": {
+      "DeepInfra": {
+        "accuracy": 1.0,
+        "price_1m": 0.5,
+        "latency": 2.51,
+        "availability": 1.0,
+        "quant": "fp4",
+        "served": 15,
+        "utc": "20260623T140930Z"
+      },
+      "Novita": {
+        "accuracy": 1.0,
+        "price_1m": 0.635,
+        "latency": 2.19,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 15,
+        "utc": "20260623T140930Z"
+      },
+      "SiliconFlow": {
+        "accuracy": 1.0,
+        "price_1m": 0.635,
+        "latency": 4.55,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 15,
+        "utc": "20260623T140930Z"
+      },
+      "AtlasCloud": {
+        "accuracy": 1.0,
+        "price_1m": 0.625,
+        "latency": 27.39,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 15,
+        "utc": "20260623T140930Z"
+      },
+      "WandB": {
+        "accuracy": 1.0,
+        "price_1m": 1.1,
+        "latency": 0.4,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 15,
+        "utc": "20260623T140930Z"
+      },
+      "Google": {
+        "accuracy": 1.0,
+        "price_1m": 1.15,
+        "latency": 1.83,
+        "availability": 0.9333333333333333,
+        "quant": "unknown",
+        "served": 14,
+        "utc": "20260623T140930Z"
+      },
+      "SambaNova": {
+        "accuracy": 1.0,
+        "price_1m": 1.075,
+        "latency": 1.68,
+        "availability": 0.9333333333333333,
+        "quant": "fp8",
+        "served": 14,
+        "utc": "20260623T140930Z"
+      }
+    },
+    "extraction": {
+      "Novita": {
+        "accuracy": 1.0,
+        "price_1m": 0.635,
+        "latency": 2.13,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 15,
+        "utc": "20260623T141644Z"
+      },
+      "SiliconFlow": {
+        "accuracy": 1.0,
+        "price_1m": 0.635,
+        "latency": 2.73,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 15,
+        "utc": "20260623T141644Z"
+      },
+      "AtlasCloud": {
+        "accuracy": 1.0,
+        "price_1m": 0.625,
+        "latency": 14.81,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 15,
+        "utc": "20260623T141644Z"
+      },
+      "WandB": {
+        "accuracy": 0.9333333333333333,
+        "price_1m": 1.1,
+        "latency": 0.43,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 15,
+        "utc": "20260623T141644Z"
+      },
+      "Google": {
+        "accuracy": 1.0,
+        "price_1m": 1.15,
+        "latency": 5.01,
+        "availability": 1.0,
+        "quant": "unknown",
+        "served": 15,
+        "utc": "20260623T141644Z"
+      },
+      "SambaNova": {
+        "accuracy": 1.0,
+        "price_1m": 1.075,
+        "latency": 1.42,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 15,
+        "utc": "20260623T141644Z"
+      }
+    },
+    "math": {
+      "DeepInfra": {
+        "accuracy": 1.0,
+        "price_1m": 0.5,
+        "latency": 38.26,
+        "availability": 0.8,
+        "quant": "fp4",
+        "served": 16,
+        "utc": "20260622T153025Z"
+      },
+      "Novita": {
+        "accuracy": 1.0,
+        "price_1m": 0.635,
+        "latency": 7.99,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 20,
+        "utc": "20260622T153025Z"
+      },
+      "SiliconFlow": {
+        "accuracy": 1.0,
+        "price_1m": 0.635,
+        "latency": 23.71,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 20,
+        "utc": "20260622T153025Z"
+      },
+      "AtlasCloud": {
+        "accuracy": 1.0,
+        "price_1m": 0.625,
+        "latency": 7.76,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 20,
+        "utc": "20260622T153025Z"
+      },
+      "WandB": {
+        "accuracy": 1.0,
+        "price_1m": 1.1,
+        "latency": 4.98,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 20,
+        "utc": "20260622T153025Z"
+      },
+      "Google": {
+        "accuracy": 1.0,
+        "price_1m": 1.15,
+        "latency": 1.82,
+        "availability": 1.0,
+        "quant": "unknown",
+        "served": 20,
+        "utc": "20260622T153025Z"
+      },
+      "SambaNova": {
+        "accuracy": 1.0,
+        "price_1m": 1.075,
+        "latency": 1.62,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 20,
+        "utc": "20260622T153025Z"
+      }
+    }
+  },
+  "google/gemma-3-27b-it": {
+    "classification": {
+      "DeepInfra": {
+        "accuracy": 1.0,
+        "price_1m": 0.12,
+        "latency": 0.97,
+        "availability": 0.9333333333333333,
+        "quant": "fp8",
+        "served": 14,
+        "utc": "20260623T143819Z"
+      },
+      "Parasail": {
+        "accuracy": 1.0,
+        "price_1m": 0.265,
+        "latency": 1.0,
+        "availability": 0.8666666666666667,
+        "quant": "fp8",
+        "served": 13,
+        "utc": "20260623T143819Z"
+      },
+      "Nebius": {
+        "accuracy": 1.0,
+        "price_1m": 0.2,
+        "latency": 0.8,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 15,
+        "utc": "20260623T143819Z"
+      },
+      "Novita": {
+        "accuracy": 1.0,
+        "price_1m": 0.1595,
+        "latency": 0.9,
+        "availability": 1.0,
+        "quant": "bf16",
+        "served": 15,
+        "utc": "20260623T143819Z"
+      },
+      "Phala": {
+        "accuracy": 1.0,
+        "price_1m": 0.305,
+        "latency": 2.91,
+        "availability": 1.0,
+        "quant": "unknown",
+        "served": 15,
+        "utc": "20260623T143819Z"
+      }
+    },
+    "extraction": {
+      "DeepInfra": {
+        "accuracy": 1.0,
+        "price_1m": 0.12,
+        "latency": 0.93,
+        "availability": 0.9333333333333333,
+        "quant": "fp8",
+        "served": 14,
+        "utc": "20260623T144226Z"
+      },
+      "Parasail": {
+        "accuracy": 1.0,
+        "price_1m": 0.265,
+        "latency": 6.8,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 15,
+        "utc": "20260623T144226Z"
+      },
+      "Nebius": {
+        "accuracy": 1.0,
+        "price_1m": 0.2,
+        "latency": 0.84,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 15,
+        "utc": "20260623T144226Z"
+      },
+      "Novita": {
+        "accuracy": 1.0,
+        "price_1m": 0.1595,
+        "latency": 0.92,
+        "availability": 1.0,
+        "quant": "bf16",
+        "served": 15,
+        "utc": "20260623T144226Z"
+      },
+      "Phala": {
+        "accuracy": 1.0,
+        "price_1m": 0.305,
+        "latency": 5.27,
+        "availability": 1.0,
+        "quant": "unknown",
+        "served": 15,
+        "utc": "20260623T144226Z"
+      }
+    },
+    "math": {
+      "Parasail": {
+        "accuracy": 0.5263157894736842,
+        "price_1m": 0.265,
+        "latency": 1.5,
+        "availability": 0.95,
+        "quant": "fp8",
+        "served": 19,
+        "utc": "20260623T143609Z"
+      },
+      "Nebius": {
+        "accuracy": 0.55,
+        "price_1m": 0.2,
+        "latency": 0.82,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 20,
+        "utc": "20260623T143609Z"
+      },
+      "Novita": {
+        "accuracy": 0.55,
+        "price_1m": 0.1595,
+        "latency": 1.29,
+        "availability": 1.0,
+        "quant": "bf16",
+        "served": 20,
+        "utc": "20260623T143609Z"
+      },
+      "Phala": {
+        "accuracy": 0.7222222222222222,
+        "price_1m": 0.305,
+        "latency": 2.51,
+        "availability": 0.9,
+        "quant": "unknown",
+        "served": 18,
+        "utc": "20260623T143609Z"
+      }
+    }
+  },
+  "meta-llama/llama-3.1-8b-instruct": {
+    "classification": {
+      "DeepInfra": {
+        "accuracy": 1.0,
+        "price_1m": 0.025,
+        "latency": 0.37,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 15,
+        "utc": "20260622T161714Z"
+      },
+      "Novita": {
+        "accuracy": 1.0,
+        "price_1m": 0.035,
+        "latency": 1.12,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 15,
+        "utc": "20260622T161714Z"
+      },
+      "Groq": {
+        "accuracy": 1.0,
+        "price_1m": 0.065,
+        "latency": 0.14,
+        "availability": 1.0,
+        "quant": "unknown",
+        "served": 15,
+        "utc": "20260622T161714Z"
+      },
+      "Cloudflare": {
+        "accuracy": 1.0,
+        "price_1m": 0.2195,
+        "latency": 0.52,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 15,
+        "utc": "20260622T161714Z"
+      },
+      "WandB": {
+        "accuracy": 1.0,
+        "price_1m": 0.22,
+        "latency": 0.39,
+        "availability": 1.0,
+        "quant": "bf16",
+        "served": 15,
+        "utc": "20260622T161714Z"
+      }
+    },
+    "extraction": {
+      "DeepInfra": {
+        "accuracy": 0.8,
+        "price_1m": 0.025,
+        "latency": 0.5,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 15,
+        "utc": "20260622T161830Z"
+      },
+      "Novita": {
+        "accuracy": 0.9333333333333333,
+        "price_1m": 0.035,
+        "latency": 1.15,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 15,
+        "utc": "20260622T161830Z"
+      },
+      "Groq": {
+        "accuracy": 0.9333333333333333,
+        "price_1m": 0.065,
+        "latency": 0.12,
+        "availability": 1.0,
+        "quant": "unknown",
+        "served": 15,
+        "utc": "20260622T161830Z"
+      },
+      "Cloudflare": {
+        "accuracy": 0.8,
+        "price_1m": 0.2195,
+        "latency": 0.57,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 15,
+        "utc": "20260622T161830Z"
+      },
+      "WandB": {
+        "accuracy": 0.8666666666666667,
+        "price_1m": 0.22,
+        "latency": 0.5,
+        "availability": 1.0,
+        "quant": "bf16",
+        "served": 15,
+        "utc": "20260622T161830Z"
+      }
+    },
+    "math": {
+      "DeepInfra": {
+        "accuracy": 0.6,
+        "price_1m": 0.025,
+        "latency": 2.66,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 20,
+        "utc": "20260623T134948Z"
+      },
+      "Novita": {
+        "accuracy": 0.8461538461538461,
+        "price_1m": 0.035,
+        "latency": 2.28,
+        "availability": 0.65,
+        "quant": "fp8",
+        "served": 13,
+        "utc": "20260623T134948Z"
+      },
+      "Groq": {
+        "accuracy": 0.5555555555555556,
+        "price_1m": 0.065,
+        "latency": 0.59,
+        "availability": 0.9,
+        "quant": "unknown",
+        "served": 18,
+        "utc": "20260623T134948Z"
+      },
+      "Cloudflare": {
+        "accuracy": 0.7,
+        "price_1m": 0.2195,
+        "latency": 7.41,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 20,
+        "utc": "20260623T134948Z"
+      },
+      "WandB": {
+        "accuracy": 0.85,
+        "price_1m": 0.22,
+        "latency": 1.51,
+        "availability": 1.0,
+        "quant": "bf16",
+        "served": 20,
+        "utc": "20260623T134948Z"
+      }
+    }
+  },
+  "meta-llama/llama-3.3-70b-instruct": {
+    "classification": {
+      "Nebius": {
+        "accuracy": 1.0,
+        "price_1m": 0.265,
+        "latency": 10.38,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 15,
+        "utc": "20260623T135503Z"
+      },
+      "AkashML": {
+        "accuracy": 1.0,
+        "price_1m": 0.265,
+        "latency": 0.68,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 15,
+        "utc": "20260623T135503Z"
+      },
+      "Novita": {
+        "accuracy": 1.0,
+        "price_1m": 0.2675,
+        "latency": 0.72,
+        "availability": 1.0,
+        "quant": "bf16",
+        "served": 15,
+        "utc": "20260623T135503Z"
+      },
+      "Parasail": {
+        "accuracy": 1.0,
+        "price_1m": 0.36,
+        "latency": 0.5,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 15,
+        "utc": "20260623T135503Z"
+      },
+      "Cloudflare": {
+        "accuracy": 1.0,
+        "price_1m": 1.273,
+        "latency": 0.52,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 15,
+        "utc": "20260623T135503Z"
+      },
+      "SambaNova": {
+        "accuracy": 1.0,
+        "price_1m": 0.675,
+        "latency": 1.61,
+        "availability": 1.0,
+        "quant": "bf16",
+        "served": 15,
+        "utc": "20260623T135503Z"
+      },
+      "WandB": {
+        "accuracy": 1.0,
+        "price_1m": 0.71,
+        "latency": 0.42,
+        "availability": 1.0,
+        "quant": "fp16",
+        "served": 15,
+        "utc": "20260623T135503Z"
+      },
+      "Google": {
+        "accuracy": 1.0,
+        "price_1m": 0.72,
+        "latency": 0.53,
+        "availability": 1.0,
+        "quant": "unknown",
+        "served": 15,
+        "utc": "20260623T135503Z"
+      },
+      "Together": {
+        "accuracy": 1.0,
+        "price_1m": 1.04,
+        "latency": 1.15,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 15,
+        "utc": "20260623T135503Z"
+      }
+    },
+    "extraction": {
+      "DeepInfra": {
+        "accuracy": 1.0,
+        "price_1m": 0.21,
+        "latency": 0.74,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 15,
+        "utc": "20260623T135836Z"
+      },
+      "Nebius": {
+        "accuracy": 1.0,
+        "price_1m": 0.265,
+        "latency": 0.76,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 15,
+        "utc": "20260623T135836Z"
+      },
+      "AkashML": {
+        "accuracy": 1.0,
+        "price_1m": 0.265,
+        "latency": 0.84,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 15,
+        "utc": "20260623T135836Z"
+      },
+      "Novita": {
+        "accuracy": 0.9333333333333333,
+        "price_1m": 0.2675,
+        "latency": 0.77,
+        "availability": 1.0,
+        "quant": "bf16",
+        "served": 15,
+        "utc": "20260623T135836Z"
+      },
+      "Parasail": {
+        "accuracy": 0.9333333333333333,
+        "price_1m": 0.36,
+        "latency": 0.59,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 15,
+        "utc": "20260623T135836Z"
+      },
+      "SambaNova": {
+        "accuracy": 0.9333333333333333,
+        "price_1m": 0.675,
+        "latency": 1.51,
+        "availability": 1.0,
+        "quant": "bf16",
+        "served": 15,
+        "utc": "20260623T135836Z"
+      },
+      "Groq": {
+        "accuracy": 1.0,
+        "price_1m": 0.69,
+        "latency": 0.25,
+        "availability": 0.5333333333333333,
+        "quant": "unknown",
+        "served": 8,
+        "utc": "20260623T135836Z"
+      },
+      "WandB": {
+        "accuracy": 0.9333333333333333,
+        "price_1m": 0.71,
+        "latency": 0.39,
+        "availability": 1.0,
+        "quant": "fp16",
+        "served": 15,
+        "utc": "20260623T135836Z"
+      },
+      "Google": {
+        "accuracy": 1.0,
+        "price_1m": 0.72,
+        "latency": 0.58,
+        "availability": 1.0,
+        "quant": "unknown",
+        "served": 15,
+        "utc": "20260623T135836Z"
+      },
+      "Together": {
+        "accuracy": 0.9333333333333333,
+        "price_1m": 1.04,
+        "latency": 1.15,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 15,
+        "utc": "20260623T135836Z"
+      }
+    },
+    "math": {
+      "DeepInfra": {
+        "accuracy": 0.65,
+        "price_1m": 0.21,
+        "latency": 3.24,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 20,
+        "utc": "20260622T144910Z"
+      },
+      "Nebius": {
+        "accuracy": 0.6,
+        "price_1m": 0.265,
+        "latency": 8.96,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 20,
+        "utc": "20260622T144910Z"
+      },
+      "AkashML": {
+        "accuracy": 0.7,
+        "price_1m": 0.265,
+        "latency": 0.92,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 20,
+        "utc": "20260622T144910Z"
+      },
+      "Novita": {
+        "accuracy": 0.6,
+        "price_1m": 0.2675,
+        "latency": 1.47,
+        "availability": 1.0,
+        "quant": "bf16",
+        "served": 20,
+        "utc": "20260622T144910Z"
+      },
+      "Parasail": {
+        "accuracy": 0.65,
+        "price_1m": 0.36,
+        "latency": 2.17,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 20,
+        "utc": "20260622T144910Z"
+      },
+      "Cloudflare": {
+        "accuracy": 0.4,
+        "price_1m": 1.273,
+        "latency": 0.94,
+        "availability": 0.25,
+        "quant": "fp8",
+        "served": 5,
+        "utc": "20260622T144910Z"
+      },
+      "SambaNova": {
+        "accuracy": 0.7,
+        "price_1m": 0.675,
+        "latency": 1.27,
+        "availability": 1.0,
+        "quant": "bf16",
+        "served": 20,
+        "utc": "20260622T144910Z"
+      },
+      "Groq": {
+        "accuracy": 0.75,
+        "price_1m": 0.69,
+        "latency": 0.16,
+        "availability": 1.0,
+        "quant": "unknown",
+        "served": 20,
+        "utc": "20260622T144910Z"
+      },
+      "WandB": {
+        "accuracy": 0.6,
+        "price_1m": 0.71,
+        "latency": 0.6,
+        "availability": 1.0,
+        "quant": "fp16",
+        "served": 20,
+        "utc": "20260622T144910Z"
+      },
+      "Google": {
+        "accuracy": 0.75,
+        "price_1m": 0.72,
+        "latency": 1.02,
+        "availability": 1.0,
+        "quant": "unknown",
+        "served": 20,
+        "utc": "20260622T144910Z"
+      },
+      "Together": {
+        "accuracy": 0.7,
+        "price_1m": 1.04,
+        "latency": 1.81,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 20,
+        "utc": "20260622T144910Z"
+      }
+    }
+  },
+  "meta-llama/llama-4-maverick": {
+    "classification": {
+      "DeepInfra": {
+        "accuracy": 1.0,
+        "price_1m": 0.375,
+        "latency": 0.45,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 15,
+        "utc": "20260623T142148Z"
+      },
+      "Novita": {
+        "accuracy": 1.0,
+        "price_1m": 0.56,
+        "latency": 0.74,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 15,
+        "utc": "20260623T142148Z"
+      },
+      "Parasail": {
+        "accuracy": 1.0,
+        "price_1m": 0.675,
+        "latency": 0.59,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 15,
+        "utc": "20260623T142148Z"
+      },
+      "Google": {
+        "accuracy": 1.0,
+        "price_1m": 0.75,
+        "latency": 1.48,
+        "availability": 1.0,
+        "quant": "unknown",
+        "served": 15,
+        "utc": "20260623T142148Z"
+      }
+    },
+    "extraction": {
+      "DeepInfra": {
+        "accuracy": 0.9333333333333333,
+        "price_1m": 0.375,
+        "latency": 0.46,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 15,
+        "utc": "20260623T142309Z"
+      },
+      "Novita": {
+        "accuracy": 0.9333333333333333,
+        "price_1m": 0.56,
+        "latency": 0.67,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 15,
+        "utc": "20260623T142309Z"
+      },
+      "Parasail": {
+        "accuracy": 0.9285714285714286,
+        "price_1m": 0.675,
+        "latency": 1.16,
+        "availability": 0.9333333333333333,
+        "quant": "fp8",
+        "served": 14,
+        "utc": "20260623T142309Z"
+      },
+      "Google": {
+        "accuracy": 0.9333333333333333,
+        "price_1m": 0.75,
+        "latency": 1.61,
+        "availability": 1.0,
+        "quant": "unknown",
+        "served": 15,
+        "utc": "20260623T142309Z"
+      }
+    },
+    "math": {
+      "DeepInfra": {
+        "accuracy": 0.85,
+        "price_1m": 0.375,
+        "latency": 3.25,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 20,
+        "utc": "20260623T142040Z"
+      },
+      "Novita": {
+        "accuracy": 0.85,
+        "price_1m": 0.56,
+        "latency": 3.23,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 20,
+        "utc": "20260623T142040Z"
+      },
+      "Parasail": {
+        "accuracy": 0.8,
+        "price_1m": 0.675,
+        "latency": 1.81,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 20,
+        "utc": "20260623T142040Z"
+      },
+      "Google": {
+        "accuracy": 0.85,
+        "price_1m": 0.75,
+        "latency": 2.29,
+        "availability": 1.0,
+        "quant": "unknown",
+        "served": 20,
+        "utc": "20260623T142040Z"
+      }
+    }
+  },
+  "mistralai/mistral-small-3.2-24b-instruct": {
+    "classification": {
+      "DeepInfra": {
+        "accuracy": 1.0,
+        "price_1m": 0.1375,
+        "latency": 1.32,
+        "availability": 0.8,
+        "quant": "fp8",
+        "served": 12,
+        "utc": "20260623T143114Z"
+      },
+      "Parasail": {
+        "accuracy": 1.0,
+        "price_1m": 0.195,
+        "latency": 0.84,
+        "availability": 1.0,
+        "quant": "bf16",
+        "served": 15,
+        "utc": "20260623T143114Z"
+      },
+      "Venice": {
+        "accuracy": 1.0,
+        "price_1m": 0.1719,
+        "latency": 0.92,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 15,
+        "utc": "20260623T143114Z"
+      },
+      "Mistral": {
+        "accuracy": 1.0,
+        "price_1m": 0.2,
+        "latency": 0.78,
+        "availability": 1.0,
+        "quant": "unknown",
+        "served": 15,
+        "utc": "20260623T143114Z"
+      }
+    },
+    "extraction": {
+      "DeepInfra": {
+        "accuracy": 0.9333333333333333,
+        "price_1m": 0.1375,
+        "latency": 1.74,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 15,
+        "utc": "20260623T143336Z"
+      },
+      "Parasail": {
+        "accuracy": 0.9333333333333333,
+        "price_1m": 0.195,
+        "latency": 2.66,
+        "availability": 1.0,
+        "quant": "bf16",
+        "served": 15,
+        "utc": "20260623T143336Z"
+      },
+      "Venice": {
+        "accuracy": 0.9333333333333333,
+        "price_1m": 0.1719,
+        "latency": 2.64,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 15,
+        "utc": "20260623T143336Z"
+      },
+      "Mistral": {
+        "accuracy": 1.0,
+        "price_1m": 0.2,
+        "latency": 1.01,
+        "availability": 1.0,
+        "quant": "unknown",
+        "served": 15,
+        "utc": "20260623T143336Z"
+      }
+    },
+    "math": {
+      "DeepInfra": {
+        "accuracy": 1.0,
+        "price_1m": 0.1375,
+        "latency": 3.82,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 20,
+        "utc": "20260623T142953Z"
+      },
+      "Parasail": {
+        "accuracy": 1.0,
+        "price_1m": 0.195,
+        "latency": 9.65,
+        "availability": 0.9,
+        "quant": "bf16",
+        "served": 18,
+        "utc": "20260623T142953Z"
+      },
+      "Venice": {
+        "accuracy": 1.0,
+        "price_1m": 0.1719,
+        "latency": 3.62,
+        "availability": 1.0,
+        "quant": "fp8",
+        "served": 20,
+        "utc": "20260623T142953Z"
+      },
+      "Mistral": {
+        "accuracy": 1.0,
+        "price_1m": 0.2,
+        "latency": 2.57,
+        "availability": 1.0,
+        "quant": "unknown",
+        "served": 20,
+        "utc": "20260623T142953Z"
+      }
+    }
+  }
+}

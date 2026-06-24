@@ -1,0 +1,200 @@
+\documentclass{article}
+\usepackage{iclr2026_conference}   % swap for the OFFICIAL ICLR 2026 .sty at submission
+\usepackage{booktabs}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage[numbers]{natbib}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\input{stats}                      % \medsave \numcells \nummodels \numtraps \maxpricex \maxlatx
+
+\title{Market-Aware LLM Inference Routing:\\ You Cannot Pick a Provider From the Price List}
+\author{Tony Wen \\ \texttt{ts2015656@gmail.com}}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Existing LLM routers treat each model's cost as a static per-model attribute and select a
+model by query difficulty. We argue this misses a first-order effect of the emerging,
+commoditized compute market: for open-weight models served by \emph{competing providers},
+the same model varies sharply in price, latency, reliability, and---silently---in answer
+\emph{quality}. We formalize \emph{market-aware routing} as a price-\emph{taker} decision
+problem (the router optimizes against exogenous, provider-given prices, distinguishing it
+from provider-side pricing games) and show, on \numcells{} (model$\times$task) cells across
+\nummodels{} open models and competing providers measured live through a public aggregator,
+that price, latency, and quality are mutually uncorrelated: cross-provider price spreads reach
+\maxpricex{}, latency spreads \maxlatx{}, and ``the same model'' ranges from 35\% to 90\%
+accuracy on hard reasoning. Consequently neither price nor the advertised quantization label
+predicts quality, and ``route to the cheapest'' silently drops below a quality floor in
+\numtraps{} of our cells. A measurement-driven router that picks the cheapest provider which is
+\emph{both} measured-equivalent \emph{and} currently healthy realizes a median \medsave{} cost
+reduction at matched quality. We release the measurement harness, the consolidated map, and an
+OpenAI-compatible routing gateway. We are explicit that our evidence is cross-sectional, not
+temporal; we discuss what the (not-yet-live) token spot market would add.
+\end{abstract}
+
+\section{Introduction}
+LLM inference is being commoditized. GPU rental prices are published as daily indices and a
+GPU \emph{compute futures} market was announced in 2026 \citep{cme2026compute}; the same
+open-weight model (Llama, Qwen, DeepSeek) is now served by dozens of competing providers at
+prices that differ by up to an order of magnitude. Yet the dominant line of LLM routing work
+---FrugalGPT \citep{chen2023frugalgpt}, RouteLLM \citep{ong2024routellm}, Hybrid~LLM
+\citep{ding2024hybrid}, CARROT \citep{somerstep2025carrot}, MixLLM \citep{wang2025mixllm}---
+represents cost as a \emph{static} per-model quantity (a published price, or the fraction of
+traffic sent to an expensive tier) and routes on query difficulty alone.
+
+This paper makes a simple empirical claim with a sharp consequence: \textbf{across competing
+providers, price, latency, reliability, and quality of the same model are mutually
+uncorrelated, so a provider cannot be chosen from the price list---it must be measured.} The
+cheapest endpoint is typically the most aggressively quantized (fp8/fp4) and sometimes silently
+loses accuracy; but the most \emph{expensive} endpoint is often neither the best nor reliable.
+Only direct, per-task measurement separates the safe-cheap provider from the cheap-and-degraded
+one.
+
+\paragraph{Contributions.}
+(i) We formalize market-aware routing as a \emph{price-taker} constrained decision problem
+(Section~\ref{sec:form}), with a \emph{price-taker assumption} that cleanly separates it from
+provider-side pricing games \citep{prillm2025} and from infrastructure-layer spot serving
+\citep{miao2024spotserve,liu2025skyserve}. (ii) We measure \numcells{} (model$\times$task) cells
+across \nummodels{} open models and their competing providers live (Section~\ref{sec:meas}),
+and show price$\perp$quality$\perp$latency$\perp$reliability (Section~\ref{sec:findings}).
+(iii) We build a measurement-driven router and show a median \medsave{} cost reduction at
+matched measured quality while avoiding the \numtraps{} ``cheapest-is-degraded'' traps
+(Section~\ref{sec:router}). We release the harness, the map, and an OpenAI-compatible gateway.
+
+\section{Related Work}
+\paragraph{Routing under static cost.} The client-side routing lineage selects a model per
+query under a static cost model: a published per-token price or the offload fraction to a
+cheaper tier \citep{chen2023frugalgpt,ong2024routellm,ding2024hybrid,somerstep2025carrot,
+wang2025mixllm}. None model time-varying prices, provider capacity, or congestion-dependent
+latency, and---central to our finding---none model \emph{cross-provider} quality heterogeneity
+for a fixed model. CARROT's SPROUT benchmark is ``price-aware'' only in the sense of folding
+static list prices into the estimate; this is orthogonal to measuring a live market.
+
+\paragraph{Provider-side pricing.} A recent line studies how a \emph{provider} should price its
+service. PriLLM \citep{prillm2025} models the market as a Stackelberg game where the provider is
+the leader \emph{setting} price to maximize profit. This is the \emph{inverse} of our problem:
+we are a client/router that takes the market price as exogenous input. Price is the leader's
+decision variable there; it is our environment's state here.
+
+\paragraph{Spot/preemptible serving.} SpotServe \citep{miao2024spotserve} and SkyServe
+\citep{liu2025skyserve} cut cost by running inference on cheap preemptible GPUs and adapting to
+\emph{availability}, assuming a \emph{static} spot-vs-on-demand gap. They act on
+\emph{where/how} a model is served, not \emph{which} provider answers a query, and sit on the
+opposite side of the routing boundary. Reacting to exogenous time-varying prices is also
+established in carbon-/electricity-aware datacenter scheduling, but that acts on
+operator-controlled physical resources, not client-side cross-provider API routing.
+
+\section{Problem Formulation}\label{sec:form}
+Queries $x_1,\dots,x_T$ arrive over a horizon. A pool $M=\{m_1,\dots,m_K\}$ of model/provider
+endpoints each has a market state $(p_m(t),c_m(t),\ell_m(t),\phi_m(t))$: token price, available
+capacity, congestion-dependent latency, failure rate. Each query carries a task type, a quality
+requirement $\theta$, a deadline $d$, and a value $v$.
+
+\paragraph{Assumption 1 (price-taker / exogenous market).} The market state evolves
+independently of the router's action: $P(m(t{+}1)\mid m(t),a_t)=P(m(t{+}1)\mid m(t))$. A single
+client's dispatch does not move provider prices or aggregate congestion. This one line is the
+formal separation from provider-side pricing \citep{prillm2025}, where price is endogenous.
+
+\paragraph{Objective.} With state $s_t=(x_t,m(t),b_t,\rho_t)$ (query, market, remaining budget,
+reserved inventory) and action $a_t$ (provider, spot/reserved tier, defer, fallback), we
+maximize value-weighted quality subject to budget, SLO, and quality-floor constraints:
+\[
+\max_\pi\ \mathbb{E}\Big[\textstyle\sum_t v_t\,\mathrm{score}(y_{a_t},y^\star)\Big]
+\ \ \text{s.t.}\ \ \mathbb{E}\big[\textstyle\sum_t \mathrm{cost}\big]\le B,\ \
+\Pr(\ell_{a_t}\!>d_t)\le\delta,\ \ Q(x_t,a_t)\ge\theta_t.
+\]
+
+\paragraph{Proposition 1 (bandit reduction).} If there is no shared budget, no reserved
+inventory, the market is exogenous (Assumption 1), and no deferral, the constrained MDP
+decouples into independent per-query problems and the optimal policy is the greedy per-query
+utility maximizer $a_t^\star=\arg\max_m U_m(x_t,m(t))$; a contextual bandit over
+$(x_t,m(t))$ suffices. Shared budget, reserved inventory, or deferral break this and require a
+constrained policy. Our empirical study operates in the bandit regime; we treat the per-query
+utility as $Q_m$ measured offline minus price and latency penalties at the current market state.
+
+\paragraph{When does measurement matter?} Let $\pi_{\text{static}}$ route on the time-averaged
+price and $\pi_{\text{mkt}}$ on the realized state. The advantage of measurement is zero only
+when the arg-max provider is unchanged by the realization, and otherwise grows with the
+\emph{dispersion} of price/quality/latency across providers and the frequency with which the
+optimal provider flips. The next sections show that dispersion is large \emph{right now}, even
+before any temporal price dynamics.
+
+\section{Measurement Methodology}\label{sec:meas}
+We probe each endpoint through a public multi-provider aggregator (OpenRouter
+\citep{openrouter}), pinning each request to a single provider with fallbacks disabled, so a
+measurement reflects \emph{that} provider's serving stack (quantization, kernels, sampling).
+For each (model, task) we run an objective probe set ($n{=}15$--$20$, exact-match scored) over
+all competing providers and record accuracy, mean latency, real per-call cost, and availability
+(served fraction, with retry/back-off and error typing: 429/5xx/timeout/client). Tasks span a
+difficulty range: multi-step \emph{math} (reasoning), \emph{extraction}, and \emph{sentiment
+classification}. Endpoints are deduplicated by (provider, quantization, price).
+
+\paragraph{Honest measurement caveats.} (a) Probe sets are small ($n\le20$): coarse
+distinctions (e.g.\ 50\% vs.\ 55\%) are within binomial noise, while the large gaps we
+emphasize (35\% vs.\ 90\%) are several standard errors. (b) Firing $\sim$20 rapid pinned
+requests at one provider can self-induce rate limits; we early-abort a provider after three
+consecutive failures and report it as low-availability, which may understate true uptime.
+(c) Reasoning models require a sufficient token budget; an initial truncation bug collapsed a
+strong model to 15\% before we corrected it---an instructive reminder that measurement harnesses
+are themselves a source of error.
+
+\section{Empirical Findings}\label{sec:findings}
+Table~\ref{tab:main} reports all \numcells{} cells. Three patterns hold.
+
+\begin{table}[t]\centering\small
+\caption{Measured dispersion per (model$\times$task). $|P|$ = competing providers;
+Acc.\ range = min--max accuracy of \emph{the same model}; Price$\times$/Lat.$\times$ =
+max/min spread; Route price = price of the cheapest measured-equivalent healthy provider;
+Save = its reduction vs.\ the premium (most expensive) provider at matched quality.
+$\dagger$ marks cells where the cheapest provider falls below the quality floor.}
+\label{tab:main}
+\input{results_table}
+\end{table}
+
+\paragraph{(1) Quality dispersion is selective but large.} On classification, providers
+saturate (all $\approx$100\%) even for a weak 8B model. On hard multi-step math, ``the same
+model'' ranges 35--90\% (8B), 40--75\% (70B), 53--72\% (others): aggressive quantization and
+serving choices silently cost tens of points. Dispersion is driven by \emph{task difficulty},
+not model size alone---the headline 35--90\% gap is a weak-model$\times$hard-task worst case.
+
+\paragraph{(2) Price and latency dispersion are universal.} Even on saturated tasks, price
+spreads reach \maxpricex{} and latency spreads \maxlatx{} for the identical model. The most
+expensive provider is frequently neither the most accurate nor the most reliable.
+
+\paragraph{(3) Neither price nor quant label predicts quality.} Two providers serving the same
+``fp8'' model differ by 30 accuracy points; a bf16 endpoint can be the most expensive and among
+the least accurate. Only direct measurement orders providers correctly.
+
+\section{Market-Aware Router}\label{sec:router}
+We route each request to the cheapest provider whose measured accuracy is within a floor of the
+best \emph{and} whose availability exceeds a threshold. Against a ``premium'' baseline (pay up
+for the dearest provider) the router achieves a median \medsave{} cost reduction at matched
+measured quality; against a ``price-blind'' baseline (sort by price) it avoids the \numtraps{}
+cells where the cheapest provider is silently sub-floor. The same policy, exposed as an
+OpenAI-compatible endpoint, lets a caller change one line (\texttt{base\_url}) and tag the task
+to obtain the per-task floor; a savings ledger records the counterfactual cost. On capable
+models where quality saturates, the router instead trades a little price for reliability,
+avoiding cheap-but-rate-limited endpoints.
+
+\section{Limitations}
+Our evidence is \emph{cross-sectional}: it establishes large dispersion \emph{at an instant},
+not that the cheapest-safe provider \emph{churns over time}. The latter---the temporal,
+``dynamic price'' story motivated by compute futures \citep{cme2026compute}---requires a
+longitudinal trace we have not yet collected, and a live token spot market does not yet exist
+(token list prices change on the order of days). Our measurements are also point-in-time and
+provider availability is partly confounded by self-induced rate limits. We therefore frame the
+contribution as measurement-driven routing under \emph{static-but-heterogeneous} markets, with
+the dynamic regime as motivated future work.
+
+\section{Conclusion}
+The same open model, served by competing providers, differs enough in price, latency,
+reliability, and silent quality that a provider cannot be chosen from the price list. Measuring
+the (model$\times$task$\times$provider) cell and routing to the cheapest measured-equivalent
+healthy endpoint yields a median \medsave{} saving at matched quality. The measurement map is
+the durable asset; the router and gateway are thin layers on top.
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+\end{document}

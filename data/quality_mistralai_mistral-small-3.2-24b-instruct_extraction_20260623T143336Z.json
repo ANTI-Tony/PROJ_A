@@ -1,0 +1,83 @@
+{
+  "model": "mistralai/mistral-small-3.2-24b-instruct",
+  "utc": "20260623T143336Z",
+  "probe_set": "extraction",
+  "results": [
+    {
+      "provider": "DeepInfra",
+      "quant": "fp8",
+      "price_1m": 0.1375,
+      "accuracy": 0.9333333333333333,
+      "availability": 1.0,
+      "served": 15,
+      "failed": 0,
+      "status": {
+        "ok": 14,
+        "ok_after_retry": 1,
+        "rate_limit": 0,
+        "server": 0,
+        "timeout": 0,
+        "client": 0
+      },
+      "mean_latency": 1.74,
+      "spent_usd": 0.000114
+    },
+    {
+      "provider": "Parasail",
+      "quant": "bf16",
+      "price_1m": 0.19499999999999998,
+      "accuracy": 0.9333333333333333,
+      "availability": 1.0,
+      "served": 15,
+      "failed": 0,
+      "status": {
+        "ok": 13,
+        "ok_after_retry": 2,
+        "rate_limit": 0,
+        "server": 0,
+        "timeout": 0,
+        "client": 0
+      },
+      "mean_latency": 2.66,
+      "spent_usd": 0.000161
+    },
+    {
+      "provider": "Venice",
+      "quant": "fp8",
+      "price_1m": 0.171875,
+      "accuracy": 0.9333333333333333,
+      "availability": 1.0,
+      "served": 15,
+      "failed": 0,
+      "status": {
+        "ok": 15,
+        "ok_after_retry": 0,
+        "rate_limit": 0,
+        "server": 0,
+        "timeout": 0,
+        "client": 0
+      },
+      "mean_latency": 2.64,
+      "spent_usd": 0.000227
+    },
+    {
+      "provider": "Mistral",
+      "quant": "unknown",
+      "price_1m": 0.19999999999999998,
+      "accuracy": 1.0,
+      "availability": 1.0,
+      "served": 15,
+      "failed": 0,
+      "status": {
+        "ok": 15,
+        "ok_after_retry": 0,
+        "rate_limit": 0,
+        "server": 0,
+        "timeout": 0,
+        "client": 0
+      },
+      "mean_latency": 1.01,
+      "spent_usd": 8e-05
+    }
+  ]
+}

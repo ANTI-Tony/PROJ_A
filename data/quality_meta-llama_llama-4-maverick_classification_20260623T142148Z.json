@@ -1,0 +1,83 @@
+{
+  "model": "meta-llama/llama-4-maverick",
+  "utc": "20260623T142148Z",
+  "probe_set": "classification",
+  "results": [
+    {
+      "provider": "DeepInfra",
+      "quant": "fp8",
+      "price_1m": 0.375,
+      "accuracy": 1.0,
+      "availability": 1.0,
+      "served": 15,
+      "failed": 0,
+      "status": {
+        "ok": 15,
+        "ok_after_retry": 0,
+        "rate_limit": 0,
+        "server": 0,
+        "timeout": 0,
+        "client": 0
+      },
+      "mean_latency": 0.45,
+      "spent_usd": 8.8e-05
+    },
+    {
+      "provider": "Novita",
+      "quant": "fp8",
+      "price_1m": 0.56,
+      "accuracy": 1.0,
+      "availability": 1.0,
+      "served": 15,
+      "failed": 0,
+      "status": {
+        "ok": 15,
+        "ok_after_retry": 0,
+        "rate_limit": 0,
+        "server": 0,
+        "timeout": 0,
+        "client": 0
+      },
+      "mean_latency": 0.74,
+      "spent_usd": 0.00015
+    },
+    {
+      "provider": "Parasail",
+      "quant": "fp8",
+      "price_1m": 0.675,
+      "accuracy": 1.0,
+      "availability": 1.0,
+      "served": 15,
+      "failed": 0,
+      "status": {
+        "ok": 15,
+        "ok_after_retry": 0,
+        "rate_limit": 0,
+        "server": 0,
+        "timeout": 0,
+        "client": 0
+      },
+      "mean_latency": 0.59,
+      "spent_usd": 0.000151
+    },
+    {
+      "provider": "Google",
+      "quant": "unknown",
+      "price_1m": 0.75,
+      "accuracy": 1.0,
+      "availability": 1.0,
+      "served": 15,
+      "failed": 0,
+      "status": {
+        "ok": 15,
+        "ok_after_retry": 0,
+        "rate_limit": 0,
+        "server": 0,
+        "timeout": 0,
+        "client": 0
+      },
+      "mean_latency": 1.48,
+      "spent_usd": 0.000201
+    }
+  ]
+}

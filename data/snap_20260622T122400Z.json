@@ -1,0 +1,473 @@
+{
+  "utc": "20260622T122400Z",
+  "models": [
+    {
+      "model": "meta-llama/llama-3.3-70b-instruct",
+      "name": "Meta: Llama 3.3 70B Instruct",
+      "endpoints": [
+        {
+          "provider": "DeepInfra",
+          "quant": "fp8",
+          "ctx": 131072,
+          "price_in_1m": 0.09999999999999999,
+          "price_out_1m": 0.32,
+          "uptime_30m": 98.18181818181819,
+          "status": 0,
+          "blended": 0.21
+        },
+        {
+          "provider": "Nebius",
+          "quant": "fp8",
+          "ctx": 131072,
+          "price_in_1m": 0.13,
+          "price_out_1m": 0.39999999999999997,
+          "uptime_30m": 93.84047686630711,
+          "status": -2,
+          "blended": 0.265
+        },
+        {
+          "provider": "AkashML",
+          "quant": "fp8",
+          "ctx": 131072,
+          "price_in_1m": 0.13,
+          "price_out_1m": 0.39999999999999997,
+          "uptime_30m": 98.64930053063193,
+          "status": 0,
+          "blended": 0.265
+        },
+        {
+          "provider": "Novita",
+          "quant": "bf16",
+          "ctx": 131072,
+          "price_in_1m": 0.135,
+          "price_out_1m": 0.39999999999999997,
+          "uptime_30m": 49.66814159292036,
+          "status": -5,
+          "blended": 0.26749999999999996
+        },
+        {
+          "provider": "Parasail",
+          "quant": "fp8",
+          "ctx": 131072,
+          "price_in_1m": 0.22,
+          "price_out_1m": 0.5,
+          "uptime_30m": 99.60140679953106,
+          "status": 0,
+          "blended": 0.36
+        },
+        {
+          "provider": "Cloudflare",
+          "quant": "fp8",
+          "ctx": 24000,
+          "price_in_1m": 0.293,
+          "price_out_1m": 2.2529999999999997,
+          "uptime_30m": 91.11675126903553,
+          "status": -2,
+          "blended": 1.273
+        },
+        {
+          "provider": "SambaNova",
+          "quant": "bf16",
+          "ctx": 16000,
+          "price_in_1m": 0.44999999999999996,
+          "price_out_1m": 0.8999999999999999,
+          "uptime_30m": 97.78393351800554,
+          "status": 0,
+          "blended": 0.6749999999999999
+        },
+        {
+          "provider": "Groq",
+          "quant": "unknown",
+          "ctx": 131072,
+          "price_in_1m": 0.59,
+          "price_out_1m": 0.7899999999999999,
+          "uptime_30m": 99.10907127429806,
+          "status": 0,
+          "blended": 0.69
+        },
+        {
+          "provider": "SambaNova",
+          "quant": "bf16",
+          "ctx": 131072,
+          "price_in_1m": 0.6,
+          "price_out_1m": 1.2,
+          "uptime_30m": 99.0909090909091,
+          "status": 0,
+          "blended": 0.8999999999999999
+        },
+        {
+          "provider": "WandB",
+          "quant": "fp16",
+          "ctx": 128000,
+          "price_in_1m": 0.71,
+          "price_out_1m": 0.71,
+          "uptime_30m": 56.747404844290664,
+          "status": -5,
+          "blended": 0.71
+        },
+        {
+          "provider": "Google",
+          "quant": "unknown",
+          "ctx": 128000,
+          "price_in_1m": 0.72,
+          "price_out_1m": 0.72,
+          "uptime_30m": 97.53231492361927,
+          "status": 0,
+          "blended": 0.72
+        },
+        {
+          "provider": "Google",
+          "quant": "unknown",
+          "ctx": 128000,
+          "price_in_1m": 0.72,
+          "price_out_1m": 0.72,
+          "uptime_30m": 100.0,
+          "status": 0,
+          "blended": 0.72
+        },
+        {
+          "provider": "Together",
+          "quant": "fp8",
+          "ctx": 131072,
+          "price_in_1m": 1.04,
+          "price_out_1m": 1.04,
+          "uptime_30m": null,
+          "status": 0,
+          "blended": 1.04
+        }
+      ]
+    },
+    {
+      "model": "meta-llama/llama-3.1-8b-instruct",
+      "name": "Meta: Llama 3.1 8B Instruct",
+      "endpoints": [
+        {
+          "provider": "DeepInfra",
+          "quant": "fp8",
+          "ctx": 131072,
+          "price_in_1m": 0.02,
+          "price_out_1m": 0.03,
+          "uptime_30m": 54.5514950166113,
+          "status": -5,
+          "blended": 0.025
+        },
+        {
+          "provider": "DeepInfra",
+          "quant": "bf16",
+          "ctx": 131072,
+          "price_in_1m": 0.02,
+          "price_out_1m": 0.049999999999999996,
+          "uptime_30m": 98.56974514198572,
+          "status": 0,
+          "blended": 0.034999999999999996
+        },
+        {
+          "provider": "Novita",
+          "quant": "fp8",
+          "ctx": 16384,
+          "price_in_1m": 0.02,
+          "price_out_1m": 0.049999999999999996,
+          "uptime_30m": 99.48451788299262,
+          "status": 0,
+          "blended": 0.034999999999999996
+        },
+        {
+          "provider": "Groq",
+          "quant": "unknown",
+          "ctx": 131072,
+          "price_in_1m": 0.049999999999999996,
+          "price_out_1m": 0.08,
+          "uptime_30m": 99.96081943356096,
+          "status": 0,
+          "blended": 0.065
+        },
+        {
+          "provider": "Cloudflare",
+          "quant": "fp8",
+          "ctx": 32000,
+          "price_in_1m": 0.15200000000000002,
+          "price_out_1m": 0.28700000000000003,
+          "uptime_30m": 99.68818782098312,
+          "status": 0,
+          "blended": 0.21950000000000003
+        },
+        {
+          "provider": "WandB",
+          "quant": "bf16",
+          "ctx": 128000,
+          "price_in_1m": 0.22,
+          "price_out_1m": 0.22,
+          "uptime_30m": 99.99745747629096,
+          "status": 0,
+          "blended": 0.22
+        }
+      ]
+    },
+    {
+      "model": "meta-llama/llama-4-maverick",
+      "name": "Meta: Llama 4 Maverick",
+      "endpoints": [
+        {
+          "provider": "DeepInfra",
+          "quant": "fp8",
+          "ctx": 1048576,
+          "price_in_1m": 0.15,
+          "price_out_1m": 0.6,
+          "uptime_30m": 99.91955756661639,
+          "status": 0,
+          "blended": 0.375
+        },
+        {
+          "provider": "Novita",
+          "quant": "fp8",
+          "ctx": 1048576,
+          "price_in_1m": 0.27,
+          "price_out_1m": 0.85,
+          "uptime_30m": 99.59559649516963,
+          "status": 0,
+          "blended": 0.56
+        },
+        {
+          "provider": "Parasail",
+          "quant": "fp8",
+          "ctx": 524288,
+          "price_in_1m": 0.35,
+          "price_out_1m": 1.0,
+          "uptime_30m": 99.85776934929478,
+          "status": 0,
+          "blended": 0.675
+        },
+        {
+          "provider": "Google",
+          "quant": "unknown",
+          "ctx": 524288,
+          "price_in_1m": 0.35,
+          "price_out_1m": 1.15,
+          "uptime_30m": 100.0,
+          "status": 0,
+          "blended": 0.75
+        }
+      ]
+    },
+    {
+      "model": "qwen/qwen3-235b-a22b",
+      "name": "Qwen: Qwen3 235B A22B",
+      "endpoints": [
+        {
+          "provider": "Alibaba",
+          "quant": "unknown",
+          "ctx": 131072,
+          "price_in_1m": 0.45499999999999996,
+          "price_out_1m": 1.8199999999999998,
+          "uptime_30m": 100.0,
+          "status": 0,
+          "blended": 1.1375
+        }
+      ]
+    },
+    {
+      "model": "deepseek/deepseek-chat-v3.1",
+      "name": "DeepSeek: DeepSeek V3.1",
+      "endpoints": [
+        {
+          "provider": "DeepInfra",
+          "quant": "fp4",
+          "ctx": 163840,
+          "price_in_1m": 0.21,
+          "price_out_1m": 0.7899999999999999,
+          "uptime_30m": 85.21626856036151,
+          "status": -2,
+          "blended": 0.49999999999999994
+        },
+        {
+          "provider": "Novita",
+          "quant": "fp8",
+          "ctx": 131072,
+          "price_in_1m": 0.27,
+          "price_out_1m": 1.0,
+          "uptime_30m": 99.98205634308272,
+          "status": 0,
+          "blended": 0.635
+        },
+        {
+          "provider": "SiliconFlow",
+          "quant": "fp8",
+          "ctx": 163840,
+          "price_in_1m": 0.27,
+          "price_out_1m": 1.0,
+          "uptime_30m": 92.59823332318003,
+          "status": -2,
+          "blended": 0.635
+        },
+        {
+          "provider": "AtlasCloud",
+          "quant": "fp8",
+          "ctx": 131072,
+          "price_in_1m": 0.3,
+          "price_out_1m": 0.95,
+          "uptime_30m": 99.92229992229991,
+          "status": 0,
+          "blended": 0.625
+        },
+        {
+          "provider": "WandB",
+          "quant": "fp8",
+          "ctx": 161000,
+          "price_in_1m": 0.55,
+          "price_out_1m": 1.6500000000000001,
+          "uptime_30m": 97.58402105011362,
+          "status": 0,
+          "blended": 1.1
+        },
+        {
+          "provider": "Google",
+          "quant": "unknown",
+          "ctx": 163840,
+          "price_in_1m": 0.6,
+          "price_out_1m": 1.7,
+          "uptime_30m": 100.0,
+          "status": 0,
+          "blended": 1.15
+        },
+        {
+          "provider": "SambaNova",
+          "quant": "fp8",
+          "ctx": 131072,
+          "price_in_1m": 0.65,
+          "price_out_1m": 1.5,
+          "uptime_30m": 98.88743455497382,
+          "status": 0,
+          "blended": 1.075
+        }
+      ]
+    },
+    {
+      "model": "deepseek/deepseek-r1",
+      "name": "DeepSeek: R1",
+      "endpoints": [
+        {
+          "provider": "Novita",
+          "quant": "fp8",
+          "ctx": 64000,
+          "price_in_1m": 0.7,
+          "price_out_1m": 2.5,
+          "uptime_30m": 99.85185185185185,
+          "status": 0,
+          "blended": 1.6
+        },
+        {
+          "provider": "Azure",
+          "quant": "unknown",
+          "ctx": 163840,
+          "price_in_1m": 1.4849999999999999,
+          "price_out_1m": 5.9399999999999995,
+          "uptime_30m": 98.74476987447699,
+          "status": 0,
+          "blended": 3.7124999999999995
+        }
+      ]
+    },
+    {
+      "model": "mistralai/mistral-small-3.2-24b-instruct",
+      "name": "Mistral: Mistral Small 3.2 24B",
+      "endpoints": [
+        {
+          "provider": "DeepInfra",
+          "quant": "fp8",
+          "ctx": 128000,
+          "price_in_1m": 0.075,
+          "price_out_1m": 0.19999999999999998,
+          "uptime_30m": 99.65019676432007,
+          "status": 0,
+          "blended": 0.13749999999999998
+        },
+        {
+          "provider": "Parasail",
+          "quant": "bf16",
+          "ctx": 131072,
+          "price_in_1m": 0.09,
+          "price_out_1m": 0.3,
+          "uptime_30m": 91.94148936170212,
+          "status": -2,
+          "blended": 0.195
+        },
+        {
+          "provider": "Venice",
+          "quant": "fp8",
+          "ctx": 256000,
+          "price_in_1m": 0.09375,
+          "price_out_1m": 0.25,
+          "uptime_30m": 99.82068141063957,
+          "status": 0,
+          "blended": 0.171875
+        },
+        {
+          "provider": "Mistral",
+          "quant": "unknown",
+          "ctx": 131072,
+          "price_in_1m": 0.09999999999999999,
+          "price_out_1m": 0.3,
+          "uptime_30m": 99.83924349881796,
+          "status": 0,
+          "blended": 0.19999999999999998
+        }
+      ]
+    },
+    {
+      "model": "google/gemma-3-27b-it",
+      "name": "Google: Gemma 3 27B",
+      "endpoints": [
+        {
+          "provider": "DeepInfra",
+          "quant": "fp8",
+          "ctx": 131072,
+          "price_in_1m": 0.08,
+          "price_out_1m": 0.16,
+          "uptime_30m": 100.0,
+          "status": 0,
+          "blended": 0.12
+        },
+        {
+          "provider": "Parasail",
+          "quant": "fp8",
+          "ctx": 131072,
+          "price_in_1m": 0.08,
+          "price_out_1m": 0.44999999999999996,
+          "uptime_30m": 99.92143614722866,
+          "status": 0,
+          "blended": 0.26499999999999996
+        },
+        {
+          "provider": "Nebius",
+          "quant": "fp8",
+          "ctx": 110000,
+          "price_in_1m": 0.09999999999999999,
+          "price_out_1m": 0.3,
+          "uptime_30m": 75.016880486158,
+          "status": -5,
+          "blended": 0.19999999999999998
+        },
+        {
+          "provider": "Novita",
+          "quant": "bf16",
+          "ctx": 98304,
+          "price_in_1m": 0.119,
+          "price_out_1m": 0.19999999999999998,
+          "uptime_30m": 78.50041921188166,
+          "status": -5,
+          "blended": 0.15949999999999998
+        },
+        {
+          "provider": "Phala",
+          "quant": "unknown",
+          "ctx": 262144,
+          "price_in_1m": 0.15,
+          "price_out_1m": 0.45999999999999996,
+          "uptime_30m": 69.67213114754098,
+          "status": -5,
+          "blended": 0.305
+        }
+      ]
+    }
+  ]
+}

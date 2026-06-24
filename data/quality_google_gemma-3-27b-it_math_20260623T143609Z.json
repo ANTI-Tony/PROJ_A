@@ -1,0 +1,102 @@
+{
+  "model": "google/gemma-3-27b-it",
+  "utc": "20260623T143609Z",
+  "probe_set": "math",
+  "results": [
+    {
+      "provider": "DeepInfra",
+      "quant": "fp8",
+      "price_1m": 0.12000000000000001,
+      "accuracy": null,
+      "availability": 0.0,
+      "served": 0,
+      "failed": 20,
+      "status": {
+        "ok": 0,
+        "ok_after_retry": 0,
+        "rate_limit": 3,
+        "server": 0,
+        "timeout": 0,
+        "client": 0
+      },
+      "mean_latency": null,
+      "spent_usd": 0.0
+    },
+    {
+      "provider": "Parasail",
+      "quant": "fp8",
+      "price_1m": 0.265,
+      "accuracy": 0.5263157894736842,
+      "availability": 0.95,
+      "served": 19,
+      "failed": 1,
+      "status": {
+        "ok": 17,
+        "ok_after_retry": 2,
+        "rate_limit": 1,
+        "server": 0,
+        "timeout": 0,
+        "client": 0
+      },
+      "mean_latency": 1.5,
+      "spent_usd": 0.00021
+    },
+    {
+      "provider": "Nebius",
+      "quant": "fp8",
+      "price_1m": 0.19999999999999998,
+      "accuracy": 0.55,
+      "availability": 1.0,
+      "served": 20,
+      "failed": 0,
+      "status": {
+        "ok": 20,
+        "ok_after_retry": 0,
+        "rate_limit": 0,
+        "server": 0,
+        "timeout": 0,
+        "client": 0
+      },
+      "mean_latency": 0.82,
+      "spent_usd": 0.000103
+    },
+    {
+      "provider": "Novita",
+      "quant": "bf16",
+      "price_1m": 0.1595,
+      "accuracy": 0.55,
+      "availability": 1.0,
+      "served": 20,
+      "failed": 0,
+      "status": {
+        "ok": 20,
+        "ok_after_retry": 0,
+        "rate_limit": 0,
+        "server": 0,
+        "timeout": 0,
+        "client": 0
+      },
+      "mean_latency": 1.29,
+      "spent_usd": 0.00014
+    },
+    {
+      "provider": "Phala",
+      "quant": "unknown",
+      "price_1m": 0.305,
+      "accuracy": 0.7222222222222222,
+      "availability": 0.9,
+      "served": 18,
+      "failed": 2,
+      "status": {
+        "ok": 17,
+        "ok_after_retry": 1,
+        "rate_limit": 2,
+        "server": 0,
+        "timeout": 0,
+        "client": 0
+      },
+      "mean_latency": 2.51,
+      "spent_usd": 0.000195
+    }
+  ]
+}

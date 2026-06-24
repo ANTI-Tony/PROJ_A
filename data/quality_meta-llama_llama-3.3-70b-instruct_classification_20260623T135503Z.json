@@ -1,0 +1,235 @@
+{
+  "model": "meta-llama/llama-3.3-70b-instruct",
+  "utc": "20260623T135503Z",
+  "probe_set": "classification",
+  "results": [
+    {
+      "provider": "DeepInfra",
+      "quant": "fp8",
+      "price_1m": 0.21,
+      "accuracy": null,
+      "availability": 0.0,
+      "served": 0,
+      "failed": 15,
+      "status": {
+        "ok": 0,
+        "ok_after_retry": 0,
+        "rate_limit": 3,
+        "server": 0,
+        "timeout": 0,
+        "client": 0
+      },
+      "mean_latency": null,
+      "spent_usd": 0.0
+    },
+    {
+      "provider": "Nebius",
+      "quant": "fp8",
+      "price_1m": 0.265,
+      "accuracy": 1.0,
+      "availability": 1.0,
+      "served": 15,
+      "failed": 0,
+      "status": {
+        "ok": 15,
+        "ok_after_retry": 0,
+        "rate_limit": 0,
+        "server": 0,
+        "timeout": 0,
+        "client": 0
+      },
+      "mean_latency": 10.38,
+      "spent_usd": 7.4e-05
+    },
+    {
+      "provider": "AkashML",
+      "quant": "fp8",
+      "price_1m": 0.265,
+      "accuracy": 1.0,
+      "availability": 1.0,
+      "served": 15,
+      "failed": 0,
+      "status": {
+        "ok": 15,
+        "ok_after_retry": 0,
+        "rate_limit": 0,
+        "server": 0,
+        "timeout": 0,
+        "client": 0
+      },
+      "mean_latency": 0.68,
+      "spent_usd": 0.00012
+    },
+    {
+      "provider": "Novita",
+      "quant": "bf16",
+      "price_1m": 0.26749999999999996,
+      "accuracy": 1.0,
+      "availability": 1.0,
+      "served": 15,
+      "failed": 0,
+      "status": {
+        "ok": 15,
+        "ok_after_retry": 0,
+        "rate_limit": 0,
+        "server": 0,
+        "timeout": 0,
+        "client": 0
+      },
+      "mean_latency": 0.72,
+      "spent_usd": 7.6e-05
+    },
+    {
+      "provider": "Parasail",
+      "quant": "fp8",
+      "price_1m": 0.36,
+      "accuracy": 1.0,
+      "availability": 1.0,
+      "served": 15,
+      "failed": 0,
+      "status": {
+        "ok": 15,
+        "ok_after_retry": 0,
+        "rate_limit": 0,
+        "server": 0,
+        "timeout": 0,
+        "client": 0
+      },
+      "mean_latency": 0.5,
+      "spent_usd": 0.000119
+    },
+    {
+      "provider": "Cloudflare",
+      "quant": "fp8",
+      "price_1m": 1.273,
+      "accuracy": 1.0,
+      "availability": 1.0,
+      "served": 15,
+      "failed": 0,
+      "status": {
+        "ok": 15,
+        "ok_after_retry": 0,
+        "rate_limit": 0,
+        "server": 0,
+        "timeout": 0,
+        "client": 0
+      },
+      "mean_latency": 0.52,
+      "spent_usd": 0.000312
+    },
+    {
+      "provider": "SambaNova",
+      "quant": "bf16",
+      "price_1m": 0.675,
+      "accuracy": 1.0,
+      "availability": 1.0,
+      "served": 15,
+      "failed": 0,
+      "status": {
+        "ok": 15,
+        "ok_after_retry": 0,
+        "rate_limit": 0,
+        "server": 0,
+        "timeout": 0,
+        "client": 0
+      },
+      "mean_latency": 1.61,
+      "spent_usd": 0.000293
+    },
+    {
+      "provider": "Groq",
+      "quant": "unknown",
+      "price_1m": 0.69,
+      "accuracy": null,
+      "availability": 0.0,
+      "served": 0,
+      "failed": 15,
+      "status": {
+        "ok": 0,
+        "ok_after_retry": 0,
+        "rate_limit": 3,
+        "server": 0,
+        "timeout": 0,
+        "client": 0
+      },
+      "mean_latency": null,
+      "spent_usd": 0.0
+    },
+    {
+      "provider": "SambaNova",
+      "quant": "bf16",
+      "price_1m": 0.8999999999999999,
+      "accuracy": 1.0,
+      "availability": 1.0,
+      "served": 15,
+      "failed": 0,
+      "status": {
+        "ok": 15,
+        "ok_after_retry": 0,
+        "rate_limit": 0,
+        "server": 0,
+        "timeout": 0,
+        "client": 0
+      },
+      "mean_latency": 0.87,
+      "spent_usd": 0.000293
+    },
+    {
+      "provider": "WandB",
+      "quant": "fp16",
+      "price_1m": 0.71,
+      "accuracy": 1.0,
+      "availability": 1.0,
+      "served": 15,
+      "failed": 0,
+      "status": {
+        "ok": 15,
+        "ok_after_retry": 0,
+        "rate_limit": 0,
+        "server": 0,
+        "timeout": 0,
+        "client": 0
+      },
+      "mean_latency": 0.42,
+      "spent_usd": 0.000358
+    },
+    {
+      "provider": "Google",
+      "quant": "unknown",
+      "price_1m": 0.72,
+      "accuracy": 1.0,
+      "availability": 1.0,
+      "served": 15,
+      "failed": 0,
+      "status": {
+        "ok": 15,
+        "ok_after_retry": 0,
+        "rate_limit": 0,
+        "server": 0,
+        "timeout": 0,
+        "client": 0
+      },
+      "mean_latency": 0.53,
+      "spent_usd": 0.000623
+    },
+    {
+      "provider": "Together",
+      "quant": "fp8",
+      "price_1m": 1.04,
+      "accuracy": 1.0,
+      "availability": 1.0,
+      "served": 15,
+      "failed": 0,
+      "status": {
+        "ok": 15,
+        "ok_after_retry": 0,
+        "rate_limit": 0,
+        "server": 0,
+        "timeout": 0,
+        "client": 0
+      },
+      "mean_latency": 1.15,
+      "spent_usd": 0.000509
+    }
+  ]
+}

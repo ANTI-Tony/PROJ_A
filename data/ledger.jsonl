@@ -1,0 +1,5 @@
+{"utc": "20260622T153229Z", "model": "meta-llama/llama-3.3-70b-instruct", "provider": "AkashML", "cost": 6.66e-06, "counterfactual_quality_first": 1.7341132075471696e-05, "latency": 0.85}
+{"utc": "20260622T153230Z", "model": "deepseek/deepseek-chat-v3.1", "provider": "AtlasCloud", "cost": 6.15e-06, "counterfactual_quality_first": 4.92e-06, "latency": 1.39}
+{"utc": "20260624T093129Z", "model": "meta-llama/llama-3.1-8b-instruct", "provider": "DeepInfra", "cost": 6.8e-07, "counterfactual_quality_first": 6.8e-07, "latency": 0.68}
+{"utc": "20260624T093421Z", "model": "deepseek/deepseek-chat-v3.1", "provider": "DeepInfra", "cost": 7.09e-06, "counterfactual_quality_first": 7.09e-06, "latency": 1.55}
+{"utc": "20260624T095338Z", "model": "meta-llama/llama-3.3-70b-instruct", "provider": "Nebius", "cost": 5.62e-06, "counterfactual_quality_first": 5.62e-06, "latency": 1.0}

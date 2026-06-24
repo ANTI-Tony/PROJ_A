@@ -1,0 +1,34 @@
+% iclr2026_conference.sty — PLACEHOLDER approximating the ICLR look so this draft
+% compiles standalone. For submission/camera-ready, replace this file with the OFFICIAL
+% ICLR 2026 template (same filename) from https://github.com/ICLR -- the .tex needs no change.
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{iclr2026_conference}[2026 ICLR placeholder]
+\RequirePackage[letterpaper,margin=1in]{geometry}
+\RequirePackage{times}
+\RequirePackage{fancyhdr}
+\RequirePackage{titlesec}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.6em}
+\widowpenalty=10000 \clubpenalty=10000
+
+% --- title / author block ---
+\renewcommand{\maketitle}{%
+  \begin{center}
+    {\LARGE\bfseries \@title \par}\vspace{1.2em}
+    {\large \@author \par}\vspace{0.6em}
+  \end{center}\vspace{0.5em}}
+
+% --- abstract: centered heading, narrower, rules above/below (ICLR-like) ---
+\renewenvironment{abstract}{%
+  \centerline{\large\bfseries Abstract}\vspace{0.3em}
+  \begin{quote}\small}{\end{quote}\vspace{0.5em}}
+
+% section formatting close to ICLR
+\titleformat{\section}{\large\bfseries}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.6em}{}
+
+\newif\if@iclrfinal\@iclrfinalfalse
+\newcommand{\iclrfinalcopy}{\@iclrfinaltrue}
+\pagestyle{plain}
+\endinput

@@ -1,0 +1,121 @@
+{
+  "model": "meta-llama/llama-3.1-8b-instruct",
+  "utc": "20260622T161714Z",
+  "probe_set": "classification",
+  "results": [
+    {
+      "provider": "DeepInfra",
+      "quant": "fp8",
+      "price_1m": 0.024999999999999998,
+      "accuracy": 1.0,
+      "availability": 1.0,
+      "served": 15,
+      "failed": 0,
+      "status": {
+        "ok": 15,
+        "ok_after_retry": 0,
+        "rate_limit": 0,
+        "server": 0,
+        "timeout": 0,
+        "client": 0
+      },
+      "mean_latency": 0.37,
+      "spent_usd": 1e-05
+    },
+    {
+      "provider": "DeepInfra",
+      "quant": "bf16",
+      "price_1m": 0.034999999999999996,
+      "accuracy": 1.0,
+      "availability": 1.0,
+      "served": 15,
+      "failed": 0,
+      "status": {
+        "ok": 15,
+        "ok_after_retry": 0,
+        "rate_limit": 0,
+        "server": 0,
+        "timeout": 0,
+        "client": 0
+      },
+      "mean_latency": 0.4,
+      "spent_usd": 1e-05
+    },
+    {
+      "provider": "Novita",
+      "quant": "fp8",
+      "price_1m": 0.034999999999999996,
+      "accuracy": 1.0,
+      "availability": 1.0,
+      "served": 15,
+      "failed": 0,
+      "status": {
+        "ok": 15,
+        "ok_after_retry": 0,
+        "rate_limit": 0,
+        "server": 0,
+        "timeout": 0,
+        "client": 0
+      },
+      "mean_latency": 1.12,
+      "spent_usd": 1.1e-05
+    },
+    {
+      "provider": "Groq",
+      "quant": "unknown",
+      "price_1m": 0.065,
+      "accuracy": 1.0,
+      "availability": 1.0,
+      "served": 15,
+      "failed": 0,
+      "status": {
+        "ok": 15,
+        "ok_after_retry": 0,
+        "rate_limit": 0,
+        "server": 0,
+        "timeout": 0,
+        "client": 0
+      },
+      "mean_latency": 0.14,
+      "spent_usd": 4.4e-05
+    },
+    {
+      "provider": "Cloudflare",
+      "quant": "fp8",
+      "price_1m": 0.21950000000000003,
+      "accuracy": 1.0,
+      "availability": 1.0,
+      "served": 15,
+      "failed": 0,
+      "status": {
+        "ok": 15,
+        "ok_after_retry": 0,
+        "rate_limit": 0,
+        "server": 0,
+        "timeout": 0,
+        "client": 0
+      },
+      "mean_latency": 0.52,
+      "spent_usd": 8.1e-05
+    },
+    {
+      "provider": "WandB",
+      "quant": "bf16",
+      "price_1m": 0.22,
+      "accuracy": 1.0,
+      "availability": 1.0,
+      "served": 15,
+      "failed": 0,
+      "status": {
+        "ok": 14,
+        "ok_after_retry": 1,
+        "rate_limit": 0,
+        "server": 0,
+        "timeout": 0,
+        "client": 0
+      },
+      "mean_latency": 0.39,
+      "spent_usd": 0.000111
+    }
+  ]
+}

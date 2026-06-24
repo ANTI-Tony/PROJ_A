@@ -1,0 +1,13 @@
+.env
+data/cron.log
+__pycache__/
+*.pyc
+# LaTeX build artifacts (Overleaf regenerates these)
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.out
+*.log
+*.synctex.gz
