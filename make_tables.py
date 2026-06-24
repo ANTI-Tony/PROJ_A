@@ -7,9 +7,9 @@ with the data. Emits:
 Run: python3 paper/make_tables.py
 """
 import json, os, sys
-HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+HERE = os.path.dirname(os.path.abspath(__file__))   # repo root (paper sources live here)
 MAP = os.path.join(HERE, "data", "quality_map.json")
-OUT = os.path.join(HERE, "paper")
+OUT = HERE
 
 sys.path.insert(0, HERE)
 from audit import analyze_cell  # reuse the same analysis the product uses
