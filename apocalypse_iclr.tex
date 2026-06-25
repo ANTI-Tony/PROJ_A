@@ -146,7 +146,16 @@ strong model to 15\% before we corrected it---an instructive reminder that measu
 are themselves a source of error.
 
 \section{Empirical Findings}\label{sec:findings}
-Table~\ref{tab:main} reports all \numcells{} cells. Three patterns hold.
+Table~\ref{tab:main} reports all \numcells{} cells; Figure~\ref{fig:scatter} visualizes the
+core claim. Three patterns hold.
+
+\begin{figure}[t]\centering
+\includegraphics[width=0.62\textwidth]{fig_price_quality.pdf}
+\caption{Every point is a provider serving a given model on a given task; the $x$-axis is its
+price relative to the cheapest provider for that same (model, task). Higher price does not yield
+higher accuracy---the cloud is flat (and many cells saturate at $100\%$ regardless of price).}
+\label{fig:scatter}
+\end{figure}
 
 \begin{table}[t]\centering\small
 \caption{Measured dispersion per (model$\times$task). $|P|$ = competing providers;
@@ -198,14 +207,28 @@ Reliability  & $\corrrel$  & no consistent price--uptime relation \\
 
 \section{Market-Aware Router}\label{sec:router}
 We route each request to the cheapest provider whose measured accuracy is within a floor of the
-best \emph{and} whose availability exceeds a threshold. Against a ``premium'' baseline (pay up
-for the dearest provider) the router achieves a median \medsave{} cost reduction at matched
-measured quality; against a ``price-blind'' baseline (sort by price) it avoids the \numtraps{}
-cells where the cheapest provider is silently sub-floor. The same policy, exposed as an
-OpenAI-compatible endpoint, lets a caller change one line (\texttt{base\_url}) and tag the task
-to obtain the per-task floor; a savings ledger records the counterfactual cost. On capable
-models where quality saturates, the router instead trades a little price for reliability,
-avoiding cheap-but-rate-limited endpoints.
+best \emph{and} whose availability exceeds a threshold (we use a $5$-point floor and $90\%$
+availability). Table~\ref{tab:baselines} compares this policy against four baselines across all
+\numcells{} cells: \emph{single-best} (always the most accurate provider), \emph{premium}
+(always the most expensive---the ``you get what you pay for'' buyer), \emph{random}, and
+\emph{cheapest} (sort by price). Our router attains $94\%$ mean accuracy---within one point of
+single-best ($95\%$)---at $1.57\times$ the cheapest price, while the premium policy pays
+$3.67\times$ for \emph{lower} accuracy and a $17\%$ below-floor rate. The price-blind policy is
+cheapest ($1.0\times$) but is sub-floor in $28\%$ of cells. Only our policy combines near-best
+quality, near-cheapest cost, the highest availability, and a $0\%$ below-floor rate; it
+Pareto-dominates premium, random, and cheapest. Exposed as an OpenAI-compatible endpoint, the
+policy lets a caller change one line (\texttt{base\_url}) and tag the task to obtain the per-task
+floor; a savings ledger records the counterfactual cost. On capable models where quality
+saturates, the router instead trades a little price for reliability, avoiding
+cheap-but-rate-limited endpoints.
+
+\begin{table}[t]\centering\small
+\caption{Routing policy comparison over all \numcells{} (model$\times$task) cells. Rel.\ cost
+normalizes each cell to its cheapest provider ($=1.0$). Below-floor is the fraction of cells
+whose pick falls below the cell's quality floor. $^\ast$averaged per cell.}
+\label{tab:baselines}
+\input{baselines_table}
+\end{table}
 
 \section{Limitations}
 Our evidence is \emph{cross-sectional}: it establishes large dispersion \emph{at an instant},
