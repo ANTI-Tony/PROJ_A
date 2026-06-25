@@ -1,0 +1,17 @@
+.env
+.git
+data/snapshots
+data/cron.log
+data/refresh.log
+__pycache__
+*.pyc
+# paper build artifacts (not needed at runtime)
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.out
+*.log
+apocalypse_iclr.pdf
+fig_price_quality.pdf

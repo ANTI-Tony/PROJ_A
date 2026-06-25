@@ -243,5 +243,6 @@ class H(BaseHTTPRequestHandler):
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", "8088"))
-    print(f"APOCALYPSE running -> http://localhost:{port}")
-    ThreadingHTTPServer(("127.0.0.1", port), H).serve_forever()
+    host = os.environ.get("HOST", "127.0.0.1")   # deploy sets HOST=0.0.0.0
+    print(f"APOCALYPSE running -> http://{host}:{port}")
+    ThreadingHTTPServer((host, port), H).serve_forever()

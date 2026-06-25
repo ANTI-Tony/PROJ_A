@@ -26,10 +26,16 @@ BASE = "https://openrouter.ai/api/v1"
 DATA = os.path.join(HERE, "data")
 
 def load_key():
-    for line in open(os.path.join(HERE, ".env")):
-        if line.startswith("OPENROUTER_API_KEY="):
-            return line.split("=", 1)[1].strip()
-    sys.exit("no OPENROUTER_API_KEY in .env")
+    # prefer env var (deploy secret); fall back to local .env file (dev)
+    k = os.environ.get("OPENROUTER_API_KEY")
+    if k:
+        return k.strip()
+    envf = os.path.join(HERE, ".env")
+    if os.path.exists(envf):
+        for line in open(envf):
+            if line.startswith("OPENROUTER_API_KEY="):
+                return line.split("=", 1)[1].strip()
+    sys.exit("no OPENROUTER_API_KEY (set env var or .env)")
 KEY = load_key()
 
 def _live_market():
