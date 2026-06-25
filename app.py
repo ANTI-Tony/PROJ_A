@@ -233,7 +233,7 @@ class H(BaseHTTPRequestHandler):
                 return
             try:                                                # non-streaming + fallback
                 d, meta = gateway.complete(body, task)
-                self._json(200, d, {"X-MAR-Provider": meta["provider"],
+                self._json(200, d, {"X-MAR-Provider": meta["provider"], "X-MAR-Task": meta["task"],
                                     "X-MAR-Fallbacks": meta["fallbacks"], "X-MAR-Acc": f"{meta['acc']:.0%}"})
             except Exception as e:
                 self._json(502, {"error": str(e)})

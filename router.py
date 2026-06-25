@@ -19,7 +19,7 @@ Usage:
   python3 router.py ask   meta-llama/llama-3.3-70b-instruct "..."  # actually route one request
   python3 router.py demo  meta-llama/llama-3.3-70b-instruct        # route a batch, print savings
 """
-import json, glob, os, sys, urllib.request, urllib.error, time, socket
+import json, glob, os, sys, re, urllib.request, urllib.error, time, socket
 
 HERE = os.path.dirname(__file__)
 BASE = "https://openrouter.ai/api/v1"
@@ -109,6 +109,51 @@ def baselines(policy):
     quality_first = max(rows, key=lambda r: (r["accuracy"], -r["price_1m"]))
     price_blind   = min(rows, key=lambda r: r["price_1m"])   # ignores quality/health
     return quality_first, price_blind
+
+# ---- task auto-detection (so callers need not tag the task) ----
+def _last_user(body):
+    if isinstance(body, str):
+        return body
+    for msg in reversed(body.get("messages", []) or []):
+        if msg.get("role") == "user":
+            return msg.get("content", "") or ""
+    return ""
+
+def detect_task(body):
+    """Cheap, zero-latency heuristic mapping a prompt to a measured task class. None if unsure."""
+    t = _last_user(body).lower()
+    if any(k in t for k in ("classify", "sentiment", "positive or negative", "category",
+                            "label this", "is this spam", "intent of")):
+        return "classification"
+    if any(k in t for k in ("extract", "pull the", "return the", "what is the value",
+                            "find the", "which number", "the order number", "the id")):
+        return "extraction"
+    if re.search(r"\d\s*[\+\-\*x/]\s*\d", t) or any(k in t for k in (
+            "calculate", "how many", "how much", "solve", "sum of", "product of",
+            "percent", "what is ", "total")):
+        return "math"
+    return None
+
+def measured_tasks(model):
+    safe = model.replace("/", "_")
+    tasks = set()
+    for f in glob.glob(os.path.join(DATA, f"quality_{safe}_*.json")):
+        lab = os.path.basename(f).split(safe + "_", 1)[-1].rsplit("_", 1)[0]
+        tasks.add("math" if lab == "hard" else lab)
+    return tasks
+
+def resolve_task(model, body, explicit=None):
+    """Explicit tag wins; else heuristic; else strictest-available task (safety default)."""
+    if explicit:
+        return explicit
+    avail = measured_tasks(model)
+    t = detect_task(body)
+    if t in avail:
+        return t
+    for pref in ("math", "extraction", "classification"):   # strictest floor first
+        if pref in avail:
+            return pref
+    return next(iter(avail), None)
 
 def fmt(r):
     return (f"{r['provider']} ({r['quant']}, ${r['price_1m']:.3f}/1M, "
