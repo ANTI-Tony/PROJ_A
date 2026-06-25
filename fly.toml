@@ -10,6 +10,11 @@ primary_region = "sjc"
 [env]
   HOST = "0.0.0.0"
   PORT = "8088"
+  MAR_DB = "/data/saas.db"
+
+[mounts]
+  source = "mar_data"
+  destination = "/data"
 
 [http_service]
   internal_port = 8088
