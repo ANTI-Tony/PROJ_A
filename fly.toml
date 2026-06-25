@@ -2,7 +2,7 @@
 #   fly launch --copy-config --name apocalypse --no-deploy
 #   fly secrets set OPENROUTER_API_KEY=sk-or-v1-...
 #   fly deploy
-app = "apocalypse"
+app = "apocalypse-router"
 primary_region = "sjc"
 
 [build]
