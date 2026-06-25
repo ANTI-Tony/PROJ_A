@@ -32,6 +32,14 @@ def load_key():
     sys.exit("no OPENROUTER_API_KEY in .env")
 KEY = load_key()
 
+def _live_market():
+    """Fresh per-(model,provider) price/health from refresh.py, if available; else {}."""
+    f = os.path.join(DATA, "live_market.json")
+    try:
+        return json.load(open(f)) if os.path.exists(f) else {}
+    except Exception:
+        return {}
+
 def latest_quality(model, task=None):
     """Most recent measured quality file for this (model, task). The safe quality
        floor is task-dependent (hard math vs classification differ), so route by task."""
@@ -58,7 +66,11 @@ def build_policy(model, quality_floor_drop=0.05, min_avail=0.9, task=None):
     rows = [r for r in q["results"] if r.get("accuracy") is not None and r.get("served", 0) >= 3]
     best = max(r["accuracy"] for r in rows)
     floor = best - quality_floor_drop
+    live = _live_market().get(model, {})   # overlay FRESH price (quality stays from slow probes)
     for r in rows:
+        lv = live.get(r["provider"])
+        if lv and lv.get("price_1m"):
+            r["price_1m"] = lv["price_1m"]; r["live"] = True
         r["equivalent"] = r["accuracy"] >= floor
         r["healthy"] = (r.get("availability", 0) >= min_avail)
         r["routable"] = r["equivalent"] and r["healthy"]

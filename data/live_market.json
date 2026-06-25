@@ -1,0 +1,273 @@
+{
+  "deepseek/deepseek-chat-v3.1": {
+    "DeepInfra": {
+      "price_1m": 0.5,
+      "uptime_30m": 100.0,
+      "uptime_1d": 99.53760766122105,
+      "latency_30m": null,
+      "status": 0
+    },
+    "Novita": {
+      "price_1m": 0.635,
+      "uptime_30m": 100.0,
+      "uptime_1d": 99.97096092275359,
+      "latency_30m": null,
+      "status": 0
+    },
+    "SiliconFlow": {
+      "price_1m": 0.635,
+      "uptime_30m": 54.72636815920397,
+      "uptime_1d": 91.6218540788495,
+      "latency_30m": null,
+      "status": -5
+    },
+    "AtlasCloud": {
+      "price_1m": 0.625,
+      "uptime_30m": 99.97439180537772,
+      "uptime_1d": 99.66537434221017,
+      "latency_30m": null,
+      "status": 0
+    },
+    "WandB": {
+      "price_1m": 1.1,
+      "uptime_30m": 99.99152350813743,
+      "uptime_1d": 98.51913410036106,
+      "latency_30m": null,
+      "status": 0
+    },
+    "Google": {
+      "price_1m": 1.15,
+      "uptime_30m": 99.59347265960491,
+      "uptime_1d": 99.40767189146702,
+      "latency_30m": null,
+      "status": 0
+    },
+    "SambaNova": {
+      "price_1m": 1.075,
+      "uptime_30m": 100.0,
+      "uptime_1d": 98.91656304248797,
+      "latency_30m": null,
+      "status": 0
+    }
+  },
+  "google/gemma-3-27b-it": {
+    "DeepInfra": {
+      "price_1m": 0.12,
+      "uptime_30m": 99.97183891861448,
+      "uptime_1d": 99.43584439562694,
+      "latency_30m": null,
+      "status": 0
+    },
+    "Parasail": {
+      "price_1m": 0.265,
+      "uptime_30m": 99.40900562851782,
+      "uptime_1d": 99.53318033578935,
+      "latency_30m": null,
+      "status": 0
+    },
+    "Nebius": {
+      "price_1m": 0.2,
+      "uptime_30m": 97.21438645980254,
+      "uptime_1d": 95.22486644165113,
+      "latency_30m": null,
+      "status": 0
+    },
+    "Novita": {
+      "price_1m": 0.1595,
+      "uptime_30m": 97.57929883138564,
+      "uptime_1d": 80.95932071750522,
+      "latency_30m": null,
+      "status": 0
+    },
+    "Phala": {
+      "price_1m": 0.305,
+      "uptime_30m": 82.35294117647058,
+      "uptime_1d": 63.432184696828585,
+      "latency_30m": null,
+      "status": -2
+    }
+  },
+  "meta-llama/llama-3.1-8b-instruct": {
+    "DeepInfra": {
+      "price_1m": 0.035,
+      "uptime_30m": 99.77287005267482,
+      "uptime_1d": 99.24794092948692,
+      "latency_30m": null,
+      "status": 0
+    },
+    "Novita": {
+      "price_1m": 0.035,
+      "uptime_30m": 99.8939217142251,
+      "uptime_1d": 99.38426514230152,
+      "latency_30m": null,
+      "status": 0
+    },
+    "Groq": {
+      "price_1m": 0.065,
+      "uptime_30m": 99.9104386600099,
+      "uptime_1d": 99.96042887505581,
+      "latency_30m": null,
+      "status": 0
+    },
+    "Cloudflare": {
+      "price_1m": 0.2195,
+      "uptime_30m": 99.66499162479062,
+      "uptime_1d": 99.78433851416672,
+      "latency_30m": null,
+      "status": 0
+    },
+    "WandB": {
+      "price_1m": 0.22,
+      "uptime_30m": 100.0,
+      "uptime_1d": 99.99714613035661,
+      "latency_30m": null,
+      "status": 0
+    }
+  },
+  "meta-llama/llama-3.3-70b-instruct": {
+    "DeepInfra": {
+      "price_1m": 0.21,
+      "uptime_30m": 98.4658996164749,
+      "uptime_1d": 97.54671298039082,
+      "latency_30m": null,
+      "status": 0
+    },
+    "Nebius": {
+      "price_1m": 0.265,
+      "uptime_30m": 96.32642998027613,
+      "uptime_1d": 93.64058662826822,
+      "latency_30m": null,
+      "status": 0
+    },
+    "AkashML": {
+      "price_1m": 0.265,
+      "uptime_30m": 99.26435311050696,
+      "uptime_1d": 97.67599300524607,
+      "latency_30m": null,
+      "status": 0
+    },
+    "Novita": {
+      "price_1m": 0.2675,
+      "uptime_30m": 99.28218932256617,
+      "uptime_1d": 96.44379208672925,
+      "latency_30m": null,
+      "status": 0
+    },
+    "Parasail": {
+      "price_1m": 0.36,
+      "uptime_30m": 98.72643912379012,
+      "uptime_1d": 99.07200329040384,
+      "latency_30m": null,
+      "status": 0
+    },
+    "Cloudflare": {
+      "price_1m": 1.273,
+      "uptime_30m": 83.27645051194538,
+      "uptime_1d": 93.31600445599703,
+      "latency_30m": null,
+      "status": -2
+    },
+    "SambaNova": {
+      "price_1m": 0.9,
+      "uptime_30m": 100.0,
+      "uptime_1d": 98.86688794780817,
+      "latency_30m": null,
+      "status": 0
+    },
+    "Groq": {
+      "price_1m": 0.69,
+      "uptime_30m": 99.78662873399715,
+      "uptime_1d": 99.88379671498365,
+      "latency_30m": null,
+      "status": 0
+    },
+    "WandB": {
+      "price_1m": 0.71,
+      "uptime_30m": 100.0,
+      "uptime_1d": 99.96085063735163,
+      "latency_30m": null,
+      "status": 0
+    },
+    "Google": {
+      "price_1m": 0.72,
+      "uptime_30m": 100.0,
+      "uptime_1d": 99.99061618172435,
+      "latency_30m": null,
+      "status": 0
+    },
+    "Together": {
+      "price_1m": 1.04,
+      "uptime_30m": null,
+      "uptime_1d": 99.36480686695279,
+      "latency_30m": null,
+      "status": 0
+    }
+  },
+  "meta-llama/llama-4-maverick": {
+    "DeepInfra": {
+      "price_1m": 0.375,
+      "uptime_30m": 99.90776454804629,
+      "uptime_1d": 99.70583041332453,
+      "latency_30m": null,
+      "status": 0
+    },
+    "DigitalOcean": {
+      "price_1m": 0.56,
+      "uptime_30m": 99.99367768856294,
+      "uptime_1d": 99.98533414220398,
+      "latency_30m": null,
+      "status": 0
+    },
+    "Novita": {
+      "price_1m": 0.56,
+      "uptime_30m": 99.96351696461146,
+      "uptime_1d": 99.41344160331721,
+      "latency_30m": null,
+      "status": 0
+    },
+    "Parasail": {
+      "price_1m": 0.675,
+      "uptime_30m": 100.0,
+      "uptime_1d": 99.9244158904475,
+      "latency_30m": null,
+      "status": 0
+    },
+    "Google": {
+      "price_1m": 0.75,
+      "uptime_30m": 100.0,
+      "uptime_1d": 99.96487403100775,
+      "latency_30m": null,
+      "status": 0
+    }
+  },
+  "mistralai/mistral-small-3.2-24b-instruct": {
+    "DeepInfra": {
+      "price_1m": 0.1375,
+      "uptime_30m": 99.88080338518385,
+      "uptime_1d": 99.48359181372834,
+      "latency_30m": null,
+      "status": 0
+    },
+    "Parasail": {
+      "price_1m": 0.195,
+      "uptime_30m": 98.84250960307298,
+      "uptime_1d": 97.32563325593902,
+      "latency_30m": null,
+      "status": 0
+    },
+    "Venice": {
+      "price_1m": 0.1719,
+      "uptime_30m": 97.88762146176595,
+      "uptime_1d": 98.98264857017767,
+      "latency_30m": null,
+      "status": 0
+    },
+    "Mistral": {
+      "price_1m": 0.2,
+      "uptime_30m": 99.739837398374,
+      "uptime_1d": 99.60586274909883,
+      "latency_30m": null,
+      "status": 0
+    }
+  }
+}
