@@ -3,10 +3,12 @@
 SQLite data layer for the multi-tenant SaaS (stdlib only; zero external deps).
 Tables: users, api_keys, usage. DB path = $MAR_DB or data/saas.db (put on a Fly volume to persist).
 
-SECURITY (MVP, honest): passwords are PBKDF2-hashed; BYOK provider keys are stored
-ENCRYPTED-AT-REST only if MAR_SECRET is set (XOR-stream over a SHA256 keystream — adequate
-obfuscation, NOT strong crypto). For production, store BYOK keys in a real secrets manager
-or encrypt with a vetted library. Treat the DB as sensitive.
+SECURITY: passwords are PBKDF2-hashed (100k iters). BYOK provider keys are encrypted at rest
+when MAR_SECRET is set, using an HMAC-SHA256 CTR-mode stream cipher with a random per-record
+nonce and encrypt-then-MAC authentication, key derived via scrypt (see enc/dec). This is a
+sound stdlib construction (authenticated, unique keystream per record). For maximum assurance
+one may swap in libsodium/Fernet, but this protects keys at rest without external deps. Treat
+the DB (and MAR_SECRET) as sensitive; rotating MAR_SECRET invalidates stored BYOK keys.
 """
 import os, sqlite3, hashlib, secrets, time, hmac
 
@@ -50,19 +52,46 @@ def check_pw(pw, stored):
     except Exception:
         return False
 
-# ---- BYOK obfuscation (see security note) ----
-def _xor(s, b=False):
+# ---- BYOK encryption: HMAC-SHA256 CTR stream cipher + encrypt-then-MAC (stdlib, authenticated).
+# Random per-record nonce -> unique keystream; key derived from MAR_SECRET via scrypt.
+import base64
+_KEY = None
+def _key():
+    global _KEY
+    if _KEY is None:
+        _KEY = hashlib.scrypt(SECRET.encode(), salt=b"mar-byok-v1", n=16384, r=8, p=1, dklen=32)
+    return _KEY
+
+def _keystream(key, nonce, n):
+    ks, ctr = b"", 0
+    while len(ks) < n:
+        ks += hmac.new(key, nonce + ctr.to_bytes(8, "big"), hashlib.sha256).digest(); ctr += 1
+    return ks[:n]
+
+def enc(s):
     if not SECRET or not s:
         return s
-    data = bytes.fromhex(s) if b else s.encode()
-    ks = b""
-    i = 0
+    key = _key(); nonce = secrets.token_bytes(16); data = s.encode()
+    ct = bytes(a ^ b for a, b in zip(data, _keystream(key, nonce, len(data))))
+    mac = hmac.new(key, nonce + ct, hashlib.sha256).digest()
+    return "v1:" + base64.b64encode(nonce + ct + mac).decode()
+
+def _legacy_dec(s):  # old fixed-keystream values (pre-v1)
+    data = bytes.fromhex(s); ks = b""; i = 0
     while len(ks) < len(data):
         ks += hashlib.sha256(f"{SECRET}:{i}".encode()).digest(); i += 1
-    out = bytes(d ^ k for d, k in zip(data, ks))
-    return out.decode() if b else out.hex()
-def enc(s): return _xor(s, b=False)
-def dec(s): return _xor(s, b=True)
+    return bytes(d ^ k for d, k in zip(data, ks)).decode()
+
+def dec(s):
+    if not SECRET or not s:
+        return s
+    if s.startswith("v1:"):
+        key = _key(); raw = base64.b64decode(s[3:])
+        nonce, ct, mac = raw[:16], raw[16:-32], raw[-32:]
+        if not hmac.compare_digest(mac, hmac.new(key, nonce + ct, hashlib.sha256).digest()):
+            raise ValueError("BYOK integrity check failed")
+        return bytes(a ^ b for a, b in zip(ct, _keystream(key, nonce, len(ct)))).decode()
+    return _legacy_dec(s)   # transparently read legacy values; rewritten as v1 on next save
 
 # ---- users ----
 def create_user(email, pw):
