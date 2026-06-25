@@ -12,14 +12,14 @@ from router import build_policy, choose, baselines, ranked, resolve_task, BASE, 
 
 MAX_TRIES = 4   # cap fallbacks so a bad model can't hammer every provider
 
-def _request(model, provider, body, stream):
+def _request(model, provider, body, stream, api_key=None):
     payload = dict(body); payload["model"] = model
     payload["provider"] = {"order": [provider], "allow_fallbacks": False}
     payload["stream"] = stream
     payload.pop("task", None)
     return urllib.request.Request(
         f"{BASE}/chat/completions", data=json.dumps(payload).encode(),
-        headers={"Authorization": f"Bearer {KEY}", "Content-Type": "application/json",
+        headers={"Authorization": f"Bearer {api_key or KEY}", "Content-Type": "application/json",
                  "HTTP-Referer": "https://localhost/mar", "X-Title": "mar-gateway"})
 
 def _plan(model, body, task):
@@ -27,25 +27,28 @@ def _plan(model, body, task):
     p = build_policy(model, task=task)
     return p, ranked(p), task
 
-def complete(body, task=None):
-    """Non-streaming with fallback. Returns (response_dict, meta). Raises if all providers fail."""
+def complete(body, task=None, api_key=None):
+    """Non-streaming with fallback. api_key = the customer's BYOK key (else server KEY).
+       Returns (response_dict, meta). Raises if all providers fail."""
     model = body["model"]; p, order, task = _plan(model, body, task)
     tried = []
     for r in order[:MAX_TRIES]:
         tried.append(r["provider"])
         try:
             t0 = time.time()
-            with urllib.request.urlopen(_request(model, r["provider"], body, False), timeout=90) as resp:
+            with urllib.request.urlopen(_request(model, r["provider"], body, False, api_key), timeout=90) as resp:
                 d = json.load(resp)
+            qf, _ = baselines(p)
             return d, {"provider": r["provider"], "quant": r["quant"], "price": r["price_1m"],
                        "acc": r["accuracy"], "fallbacks": len(tried) - 1, "tried": tried, "task": task,
                        "latency": round(time.time() - t0, 2), "floor": p["floor"],
+                       "premium_price": qf["price_1m"],
                        "cost": (d.get("usage", {}) or {}).get("cost", 0) or 0}
         except (urllib.error.HTTPError, urllib.error.URLError, socket.timeout, TimeoutError):
             continue
     raise RuntimeError(f"all {len(tried)} providers failed: {tried}")
 
-def stream(body, task, write):
+def stream(body, task, write, api_key=None):
     """Streaming with connect-time fallback. `write(bytes)` forwards SSE chunks. Returns meta.
        Fallback applies until the first byte; once forwarding begins we do not switch providers."""
     model = body["model"]; p, order, task = _plan(model, body, task)
@@ -53,7 +56,7 @@ def stream(body, task, write):
     for r in order[:MAX_TRIES]:
         tried.append(r["provider"])
         try:
-            resp = urllib.request.urlopen(_request(model, r["provider"], body, True), timeout=90)
+            resp = urllib.request.urlopen(_request(model, r["provider"], body, True, api_key), timeout=90)
         except (urllib.error.HTTPError, urllib.error.URLError, socket.timeout, TimeoutError):
             continue
         try:
