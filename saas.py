@@ -15,13 +15,65 @@ using THEIR key. They see usage + savings on a dashboard. Stdlib only (http.serv
 
 Run:  python3 saas.py        # http://localhost:8088
 """
-import json, os, time, base64, hmac, hashlib, secrets, urllib.parse
+import json, os, time, base64, hmac, hashlib, secrets, urllib.parse, urllib.request
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import db, gateway
 from audit import analyze_cell
 
 db.init()
 SECRET = os.environ.get("MAR_SECRET") or secrets.token_hex(16)
+
+# ---------- OAuth (GitHub + Google) ----------
+OAUTH = {
+    "github": {
+        "id": os.environ.get("GITHUB_CLIENT_ID"), "secret": os.environ.get("GITHUB_CLIENT_SECRET"),
+        "auth": "https://github.com/login/oauth/authorize", "scope": "user:email",
+        "token": "https://github.com/login/oauth/access_token"},
+    "google": {
+        "id": os.environ.get("GOOGLE_CLIENT_ID"), "secret": os.environ.get("GOOGLE_CLIENT_SECRET"),
+        "auth": "https://accounts.google.com/o/oauth2/v2/auth", "scope": "openid email",
+        "token": "https://oauth2.googleapis.com/token"},
+}
+def oauth_on(p): return bool(OAUTH[p]["id"] and OAUTH[p]["secret"])
+
+def _sign_state(provider):
+    nonce = secrets.token_urlsafe(8)
+    sig = hmac.new(SECRET.encode(), f"{provider}:{nonce}".encode(), hashlib.sha256).hexdigest()[:16]
+    return f"{provider}.{nonce}.{sig}"
+
+def _check_state(state, provider):
+    try:
+        prov, nonce, sig = state.split(".")
+        good = hmac.new(SECRET.encode(), f"{prov}:{nonce}".encode(), hashlib.sha256).hexdigest()[:16]
+        return prov == provider and hmac.compare_digest(good, sig)
+    except Exception:
+        return False
+
+def _post_json(url, data, headers=None):
+    req = urllib.request.Request(url, data=urllib.parse.urlencode(data).encode(),
+                                 headers={"Accept": "application/json", **(headers or {})})
+    with urllib.request.urlopen(req, timeout=20) as r:
+        return json.load(r)
+
+def _get_json(url, token, scheme="Bearer"):
+    req = urllib.request.Request(url, headers={"Authorization": f"{scheme} {token}",
+                                               "Accept": "application/json", "User-Agent": "apocalypse"})
+    with urllib.request.urlopen(req, timeout=20) as r:
+        return json.load(r)
+
+def oauth_email(provider, code, redirect_uri):
+    cfg = OAUTH[provider]
+    if provider == "github":
+        tok = _post_json(cfg["token"], {"client_id": cfg["id"], "client_secret": cfg["secret"],
+                                        "code": code, "redirect_uri": redirect_uri})["access_token"]
+        emails = _get_json("https://api.github.com/user/emails", tok, "token")
+        primary = next((e["email"] for e in emails if e.get("primary") and e.get("verified")), None)
+        return primary or (emails[0]["email"] if emails else None)
+    else:  # google
+        tok = _post_json(cfg["token"], {"client_id": cfg["id"], "client_secret": cfg["secret"],
+                         "code": code, "redirect_uri": redirect_uri, "grant_type": "authorization_code"})
+        info = _get_json("https://openidconnect.googleapis.com/v1/userinfo", tok["access_token"])
+        return info.get("email") if info.get("email_verified") else info.get("email")
 
 # ---------- sessions ----------
 def sign(uid):
@@ -82,9 +134,17 @@ request auto-routes to the cheapest provider that is quality-equivalent and heal
 <p><a href="/signup">Create an account</a> → save your OpenRouter key → change one line (<code>base_url</code>). BYOK: we never charge you for inference.</p></div>""")
 
 def auth_form(kind, err=""):
+    social = ""
+    if oauth_on("github"):
+        social += '<a href="/auth/github"><button class="ghost" style="width:100%;margin:4px 0">Continue with GitHub</button></a>'
+    if oauth_on("google"):
+        social += '<a href="/auth/google"><button class="ghost" style="width:100%;margin:4px 0">Continue with Google</button></a>'
+    if social:
+        social = social + '<p class="dim" style="text-align:center;margin:10px 0">— or —</p>'
     return page(kind, f"""
 <div class="panel" style="max-width:420px;margin:40px auto"><h2>{kind}</h2>
 {'<p class="err">'+err+'</p>' if err else ''}
+{social}
 <form method="post" action="/{kind}">
   <input name="email" type="email" placeholder="email" required>
   <input name="pw" type="password" placeholder="password" required>
@@ -209,8 +269,36 @@ class H(BaseHTTPRequestHandler):
             if not uid:
                 return self._redirect("/login")
             self._html(dashboard(uid, self._base()))
+        elif p.startswith("/auth/"):
+            self._oauth(p)
         else:
             self._html(page("404", "<p>not found</p>", uid), 404)
+
+    def _oauth(self, path):
+        parts = path.split("/")             # /auth/<provider>[/callback]
+        provider = parts[2] if len(parts) > 2 else ""
+        if provider not in OAUTH or not oauth_on(provider):
+            return self._html(page("oauth", "<p class='err'>provider not configured</p>"), 400)
+        redirect_uri = f"{self._base()}/auth/{provider}/callback"
+        if len(parts) <= 3:                 # start: redirect to provider
+            cfg = OAUTH[provider]
+            q = urllib.parse.urlencode({"client_id": cfg["id"], "redirect_uri": redirect_uri,
+                                        "scope": cfg["scope"], "state": _sign_state(provider),
+                                        "response_type": "code"})
+            return self._redirect(f"{cfg['auth']}?{q}")
+        # callback: verify state, exchange code -> email -> session
+        qs = urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query)
+        code, state = qs.get("code", [""])[0], qs.get("state", [""])[0]
+        if not code or not _check_state(state, provider):
+            return self._html(auth_form("login", "OAuth failed (bad state)"), 400)
+        try:
+            email = oauth_email(provider, code, redirect_uri)
+        except Exception as e:
+            return self._html(auth_form("login", f"OAuth error: {e}"), 400)
+        if not email:
+            return self._html(auth_form("login", "could not get a verified email from provider"), 400)
+        uid = db.upsert_oauth_user(email, provider)
+        self._redirect("/dashboard", f"mar_session={sign(uid)}; HttpOnly; Path=/; Max-Age=2592000")
 
     def do_POST(self):
         p = self.path.rstrip("/")

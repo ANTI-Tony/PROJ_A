@@ -107,6 +107,18 @@ def get_user_by_email(email):
     with conn() as c:
         return c.execute("SELECT * FROM users WHERE email=?", (email.lower().strip(),)).fetchone()
 
+def upsert_oauth_user(email, provider):
+    """Get-or-create a user from an OAuth login (no password; marker pw). Issues a key on first login."""
+    u = get_user_by_email(email)
+    if u:
+        return u["id"]
+    with conn() as c:
+        cur = c.execute("INSERT INTO users(email,pw,created) VALUES(?,?,?)",
+                        (email.lower().strip(), f"oauth:{provider}", _now()))
+        uid = cur.lastrowid
+    create_api_key(uid)
+    return uid
+
 def get_user(uid):
     with conn() as c:
         return c.execute("SELECT * FROM users WHERE id=?", (uid,)).fetchone()
