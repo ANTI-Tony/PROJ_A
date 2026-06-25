@@ -23,9 +23,12 @@ the same model varies sharply in price, latency, reliability, and---silently---i
 problem (the router optimizes against exogenous, provider-given prices, distinguishing it
 from provider-side pricing games) and show, on \numcells{} (model$\times$task) cells across
 \nummodels{} open models and competing providers measured live through a public aggregator,
-that price, latency, and quality are mutually uncorrelated: cross-provider price spreads reach
-\maxpricex{}, latency spreads \maxlatx{}, and ``the same model'' ranges from 35\% to 90\%
-accuracy on hard reasoning. Consequently neither price nor the advertised quantization label
+that price is no guide to provider choice: cross-provider price spreads reach \maxpricex{} and
+latency spreads \maxlatx{} for the identical model, ``the same model'' ranges from 35\% to 90\%
+accuracy on hard reasoning, and the within-cell rank correlation between price and accuracy is
+negligible (median Spearman $\corrqual$). Price is likewise an unreliable predictor of latency
+and reliability---near zero on average with signs that flip across cells (median
+$\corrlat$ and $\corrrel$). Consequently neither price nor the advertised quantization label
 predicts quality, and ``route to the cheapest'' silently drops below a quality floor in
 \numtraps{} of our cells. A measurement-driven router that picks the cheapest provider which is
 \emph{both} measured-equivalent \emph{and} currently healthy realizes a median \medsave{} cost
@@ -45,8 +48,8 @@ represents cost as a \emph{static} per-model quantity (a published price, or the
 traffic sent to an expensive tier) and routes on query difficulty alone.
 
 This paper makes a simple empirical claim with a sharp consequence: \textbf{across competing
-providers, price, latency, reliability, and quality of the same model are mutually
-uncorrelated, so a provider cannot be chosen from the price list---it must be measured.} The
+providers, price is not a reliable guide to the quality, latency, or reliability of the same
+model, so a provider cannot be chosen from the price list---it must be measured.} The
 cheapest endpoint is typically the most aggressively quantized (fp8/fp4) and sometimes silently
 loses accuracy; but the most \emph{expensive} endpoint is often neither the best nor reliable.
 Only direct, per-task measurement separates the safe-cheap provider from the cheap-and-degraded
@@ -58,7 +61,9 @@ one.
 provider-side pricing games \citep{prillm2025} and from infrastructure-layer spot serving
 \citep{miao2024spotserve,liu2025skyserve}. (ii) We measure \numcells{} (model$\times$task) cells
 across \nummodels{} open models and their competing providers live (Section~\ref{sec:meas}),
-and show price$\perp$quality$\perp$latency$\perp$reliability (Section~\ref{sec:findings}).
+and quantify that price does not predict quality (median within-cell Spearman $\corrqual$ over
+\corrqualn{} cells with quality variance) and predicts latency/reliability no more consistently
+(Section~\ref{sec:findings}).
 (iii) We build a measurement-driven router and show a median \medsave{} cost reduction at
 matched measured quality while avoiding the \numtraps{} ``cheapest-is-degraded'' traps
 (Section~\ref{sec:router}). We release the harness, the map, and an OpenAI-compatible gateway.
@@ -163,9 +168,33 @@ not model size alone---the headline 35--90\% gap is a weak-model$\times$hard-tas
 spreads reach \maxpricex{} and latency spreads \maxlatx{} for the identical model. The most
 expensive provider is frequently neither the most accurate nor the most reliable.
 
-\paragraph{(3) Neither price nor quant label predicts quality.} Two providers serving the same
-``fp8'' model differ by 30 accuracy points; a bf16 endpoint can be the most expensive and among
-the least accurate. Only direct measurement orders providers correctly.
+\paragraph{(3) Price is no guide; only measurement orders providers.} Two providers serving the
+same ``fp8'' model differ by 30 accuracy points; a bf16 endpoint can be the most expensive and
+among the least accurate. We quantify this with the within-cell Spearman rank correlation
+between provider price and each metric (Table~\ref{tab:corr}). Price and accuracy are
+essentially uncorrelated (median $\corrqual$ over the \corrqualn{} cells with quality variance;
+$|r|>0.5$ in only one). Price predicts latency and reliability no more usefully: the medians are
+small ($\corrlat$, $\corrrel$) but, crucially, the \emph{sign flips across cells}, so no
+global ``cheaper-is-faster'' or ``dearer-is-safer'' rule holds. (The reliability correlation is
+additionally confounded by self-induced rate limits, Section~\ref{sec:meas}.) The actionable
+claim is therefore not statistical independence but that \emph{no price-based heuristic reliably
+selects the best provider on any axis}---measurement is required.
+
+\begin{table}[t]\centering\small
+\caption{Within-(model$\times$task) Spearman rank correlation of provider \emph{price} against
+each metric, median over cells with variance. Near-zero medians and sign-flipping across cells
+mean price is not a usable predictor.}
+\label{tab:corr}
+\begin{tabular}{lcc}
+\toprule
+Price vs. & Median Spearman & Interpretation \\
+\midrule
+Accuracy     & $\corrqual$ & paying more does not buy quality \\
+Latency      & $\corrlat$  & no consistent price--speed relation \\
+Reliability  & $\corrrel$  & no consistent price--uptime relation \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \section{Market-Aware Router}\label{sec:router}
 We route each request to the cheapest provider whose measured accuracy is within a floor of the
