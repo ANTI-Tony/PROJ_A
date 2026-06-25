@@ -40,7 +40,8 @@ def latest_quality(model, task=None):
     if not files:
         return None
     if task:
-        tf = [f for f in files if f"_{task}_" in f]
+        pats = [f"_{task}_"] + (["_hard_"] if task == "math" else [])  # legacy 'hard' == math
+        tf = [f for f in files if any(pt in f for pt in pats)]
         return json.load(open(tf[-1])) if tf else None
     pref = [f for f in files if "_math_" in f or "_hard_" in f]  # default: general reasoning signal
     return json.load(open((pref or files)[-1]))
@@ -51,8 +52,9 @@ def build_policy(model, quality_floor_drop=0.05, min_avail=0.9, task=None):
        min_avail: minimum measured availability to be routable."""
     q = latest_quality(model, task)
     if not q:
-        sys.exit(f"No measured quality for {model} task={task}. "
-                 f"Run: python3 probe_quality.py {model} --task={task or 'math'}")
+        # raise (not sys.exit): SystemExit bypasses `except Exception` in server handlers
+        raise ValueError(f"No measured quality for {model} task={task}. "
+                         f"Run: python3 probe_quality.py {model} --task={task or 'math'}")
     rows = [r for r in q["results"] if r.get("accuracy") is not None and r.get("served", 0) >= 3]
     best = max(r["accuracy"] for r in rows)
     floor = best - quality_floor_drop
@@ -70,6 +72,19 @@ def choose(policy):
         healthy = [r for r in policy["rows"] if r["healthy"]] or policy["rows"]
         return max(healthy, key=lambda r: r["accuracy"]), "fallback(no quality-equivalent healthy endpoint)"
     return min(routable, key=lambda r: r["price_1m"]), "cheapest quality-equivalent + healthy"
+
+def ranked(policy):
+    """Ordered fallback list: cheapest quality-equivalent+healthy first, then other healthy
+       by accuracy, then the rest by accuracy. The gateway tries these in order."""
+    rows = policy["rows"]
+    routable = sorted((r for r in rows if r["routable"]), key=lambda r: r["price_1m"])
+    healthy  = sorted((r for r in rows if r["healthy"] and not r["routable"]), key=lambda r: -r["accuracy"])
+    rest     = sorted((r for r in rows if not r["healthy"]), key=lambda r: -r["accuracy"])
+    seen, out = set(), []
+    for r in (*routable, *healthy, *rest):
+        if r["provider"] not in seen:
+            seen.add(r["provider"]); out.append(r)
+    return out
 
 def baselines(policy):
     rows = policy["rows"]

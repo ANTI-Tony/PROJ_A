@@ -3,3 +3,5 @@
 {"utc": "20260624T093129Z", "model": "meta-llama/llama-3.1-8b-instruct", "provider": "DeepInfra", "cost": 6.8e-07, "counterfactual_quality_first": 6.8e-07, "latency": 0.68}
 {"utc": "20260624T093421Z", "model": "deepseek/deepseek-chat-v3.1", "provider": "DeepInfra", "cost": 7.09e-06, "counterfactual_quality_first": 7.09e-06, "latency": 1.55}
 {"utc": "20260624T095338Z", "model": "meta-llama/llama-3.3-70b-instruct", "provider": "Nebius", "cost": 5.62e-06, "counterfactual_quality_first": 5.62e-06, "latency": 1.0}
+{"utc": "20260625T035834Z", "model": "meta-llama/llama-3.1-8b-instruct", "provider": "DeepInfra", "cost": 6.6e-07, "counterfactual_quality_first": 6.6e-07, "latency": 0.63}
+{"utc": "20260625T040002Z", "model": "meta-llama/llama-3.3-70b-instruct", "provider": "AkashML", "cost": 6.52e-06, "counterfactual_quality_first": 1.6976603773584905e-05, "latency": 0.45}

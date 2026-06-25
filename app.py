@@ -19,6 +19,7 @@ import json, os, time, urllib.request, urllib.error
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from router import build_policy, choose, baselines, call, BASE, KEY
 from audit import analyze_cell
+import gateway
 
 HERE = os.path.dirname(__file__)
 MAP = os.path.join(HERE, "data", "quality_map.json")
@@ -59,15 +60,18 @@ def ledger_summary():
             "saved_pct": round(100*(cf-spent)/cf, 1) if cf else 0}
 
 def do_route(model, task, prompt):
-    p = build_policy(model, task=task)
-    pick, why = choose(p); qf, pb = baselines(p)
-    answer, dt, cost = call(model, pick["provider"], [{"role": "user", "content": prompt}])
-    save = (qf["price_1m"]-pick["price_1m"])/qf["price_1m"] if qf["price_1m"] else 0
-    log_ledger(model, pick, qf, cost, dt)
-    return {"provider": pick["provider"], "quant": pick["quant"], "price": pick["price_1m"],
-            "acc": pick["accuracy"], "reason": why, "answer": answer, "latency": round(dt, 2),
-            "cost": cost, "premium": qf["provider"], "premium_price": qf["price_1m"],
-            "save_pct": round(save*100), "floor": round(p["floor"]*100),
+    p = build_policy(model, task=task); qf, pb = baselines(p)
+    d, meta = gateway.complete(
+        {"model": model, "messages": [{"role": "user", "content": prompt}], "max_tokens": 1024}, task)
+    answer = d["choices"][0]["message"]["content"]
+    save = (qf["price_1m"]-meta["price"])/qf["price_1m"] if qf["price_1m"] else 0
+    log_ledger(model, {"provider": meta["provider"], "price_1m": meta["price"]}, qf, meta["cost"], meta["latency"])
+    reason = "cheapest quality-equivalent + healthy" if meta["fallbacks"] == 0 \
+             else f"primary failed; failed over {meta['fallbacks']}× to a healthy provider"
+    return {"provider": meta["provider"], "quant": meta["quant"], "price": meta["price"],
+            "acc": meta["acc"], "reason": reason, "answer": answer, "latency": meta["latency"],
+            "cost": meta["cost"], "fallbacks": meta["fallbacks"], "premium": qf["provider"],
+            "premium_price": qf["price_1m"], "save_pct": round(save*100), "floor": round(p["floor"]*100),
             "cheapest": pb["provider"], "cheapest_acc": round(pb["accuracy"]*100),
             "quality_trap": pb["accuracy"] < p["floor"]}
 
@@ -170,6 +174,7 @@ async function route(){
     if(d.error){card.innerHTML=`<span class="b-red badge">error</span> ${d.error}`;card.className='card show';return;}
     const trap=d.quality_trap?`<span class="b-red badge">⚠ cheapest (${d.cheapest}) only ${d.cheapest_acc}% &lt; floor ${d.floor}% — avoided</span>`:'';
     card.innerHTML=`<span class="b-cyan badge">→ ${d.provider} (${d.quant})</span>
+      ${d.fallbacks>0?`<span class="b-orange badge">⤷ failed over ${d.fallbacks}×</span>`:''}
       <span class="b-green badge">save ${d.save_pct}% vs ${d.premium}</span>
       <span class="b-orange badge">${d.latency}s · $${d.cost.toFixed(6)}</span>
       <span class="b-cyan badge">measured acc ${Math.round(d.acc*100)}%</span> ${trap}
@@ -183,9 +188,11 @@ init();
 </script></body></html>"""
 
 class H(BaseHTTPRequestHandler):
-    def _json(self, code, obj):
+    def _json(self, code, obj, extra=None):
         b = json.dumps(obj).encode(); self.send_response(code)
-        self.send_header("Content-Type", "application/json"); self.send_header("Content-Length", str(len(b)))
+        self.send_header("Content-Type", "application/json")
+        for k, v in (extra or {}).items(): self.send_header(k, str(v))
+        self.send_header("Content-Length", str(len(b)))
         self.end_headers(); self.wfile.write(b)
     def _html(self, s):
         b = s.encode(); self.send_response(200)
@@ -212,14 +219,22 @@ class H(BaseHTTPRequestHandler):
             except Exception as e:
                 self._json(200, {"error": str(e)})
         elif p == "/v1/chat/completions":
-            try:
-                model = body["model"]; task = body.pop("task", None) or self.headers.get("X-MAR-Task")
-                pol = build_policy(model, task=task); pick, _ = choose(pol)
-                payload = dict(body); payload["provider"] = {"order": [pick["provider"]], "allow_fallbacks": False}
-                req = urllib.request.Request(f"{BASE}/chat/completions", data=json.dumps(payload).encode(),
-                    headers={"Authorization": f"Bearer {KEY}", "Content-Type": "application/json"})
-                with urllib.request.urlopen(req, timeout=120) as r:
-                    self._json(200, json.load(r))
+            task = body.pop("task", None) or self.headers.get("X-MAR-Task")
+            if body.get("stream"):                              # SSE streaming + connect-time fallback
+                self.send_response(200)
+                self.send_header("Content-Type", "text/event-stream")
+                self.send_header("Cache-Control", "no-cache")
+                self.end_headers()
+                try:
+                    gateway.stream(body, task, self.wfile.write)
+                except Exception as e:
+                    try: self.wfile.write(f"data: {json.dumps({'error': str(e)})}\n\n".encode())
+                    except Exception: pass
+                return
+            try:                                                # non-streaming + fallback
+                d, meta = gateway.complete(body, task)
+                self._json(200, d, {"X-MAR-Provider": meta["provider"],
+                                    "X-MAR-Fallbacks": meta["fallbacks"], "X-MAR-Acc": f"{meta['acc']:.0%}"})
             except Exception as e:
                 self._json(502, {"error": str(e)})
         else:
