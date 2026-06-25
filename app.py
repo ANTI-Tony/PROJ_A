@@ -15,13 +15,14 @@ backed by the measured quality map and the live market-aware router.
 
 Run:  python3 app.py      # http://localhost:8088
 """
-import json, os, time, urllib.request, urllib.error
+import json, os, time, base64, urllib.request, urllib.error
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from router import build_policy, choose, baselines, call, BASE, KEY
 from audit import analyze_cell
 import gateway
 
 HERE = os.path.dirname(__file__)
+APP_PASSWORD = os.environ.get("APP_PASSWORD")   # if set, whole site requires this login password
 MAP = os.path.join(HERE, "data", "quality_map.json")
 LEDGER = os.path.join(HERE, "data", "ledger.jsonl")
 
@@ -198,7 +199,25 @@ class H(BaseHTTPRequestHandler):
         b = s.encode(); self.send_response(200)
         self.send_header("Content-Type", "text/html; charset=utf-8"); self.send_header("Content-Length", str(len(b)))
         self.end_headers(); self.wfile.write(b)
+    def _authorized(self):
+        # no password configured -> open (local dev). Otherwise require Basic (browser login)
+        # or Bearer <password> (so OpenAI SDK callers set api_key = the password).
+        if not APP_PASSWORD:
+            return True
+        h = self.headers.get("Authorization", "")
+        if h.startswith("Basic "):
+            try:
+                if base64.b64decode(h[6:]).decode().partition(":")[2] == APP_PASSWORD:
+                    return True
+            except Exception:
+                pass
+        return h.startswith("Bearer ") and h[7:].strip() == APP_PASSWORD
+    def _deny(self):
+        self.send_response(401)
+        self.send_header("WWW-Authenticate", 'Basic realm="APOCALYPSE"')
+        self.send_header("Content-Length", "0"); self.end_headers()
     def do_GET(self):
+        if not self._authorized(): return self._deny()
         p = self.path.rstrip("/")
         if p in ("", "/"): self._html(PAGE)
         elif p == "/api/map": self._json(200, load_map())
@@ -206,6 +225,7 @@ class H(BaseHTTPRequestHandler):
         elif p == "/api/ledger": self._json(200, ledger_summary())
         else: self._json(404, {"error": "not found"})
     def do_POST(self):
+        if not self._authorized(): return self._deny()
         try:
             body = json.loads(self.rfile.read(int(self.headers.get("Content-Length", 0))) or b"{}")
         except Exception:

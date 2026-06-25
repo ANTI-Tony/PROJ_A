@@ -16,8 +16,9 @@ docker run -p 8088:8088 -e OPENROUTER_API_KEY=sk-or-v1-... apocalypse
 ```bash
 fly launch --copy-config --name apocalypse --no-deploy   # uses fly.toml
 fly secrets set OPENROUTER_API_KEY=sk-or-v1-...           # secret, not in image
+fly secrets set APP_PASSWORD=your-login-password          # gates the whole site (protects your key)
 fly deploy
-# -> https://apocalypse.fly.dev
+# -> https://apocalypse.fly.dev  (browser shows a login prompt; API callers use the password as the api_key)
 ```
 
 ## Railway / Render
