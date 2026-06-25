@@ -93,64 +93,111 @@ def unsign(cookie):
 
 # ---------- HTML ----------
 CSS = """
-:root{--bg:#05070d;--panel:#0b1020;--line:#16213e;--cyan:#22d3ee;--orange:#ff8a3d;--green:#34d399;--red:#f87171;--txt:#cdd6e8;--dim:#6b7a99}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font:14px/1.6 ui-monospace,Menlo,monospace}
-a{color:var(--cyan);text-decoration:none}.wrap{max-width:880px;margin:0 auto;padding:30px 20px 70px}
-header{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid var(--line);padding-bottom:16px}
-.logo{font-size:24px;font-weight:800;letter-spacing:5px;color:#fff;text-shadow:0 0 16px var(--cyan)}.logo b{color:var(--cyan)}
-h1{font-size:22px;color:#fff}.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;margin:16px 0}
-.panel h2{font-size:13px;letter-spacing:2px;color:var(--cyan);text-transform:uppercase;margin:0 0 12px}
-input,button{font:13px ui-monospace,monospace;background:#0a0f1d;color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:10px}
-input{width:100%;margin:6px 0}button{background:var(--cyan);color:#04111a;font-weight:700;border:0;cursor:pointer;padding:10px 18px}
-button.ghost{background:transparent;color:var(--dim);border:1px solid var(--line)}
-.stats{display:flex;gap:12px}.stat{flex:1;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px}
-.stat .v{font-size:24px;color:var(--green);font-weight:700}.stat .k{color:var(--dim);font-size:12px}
-table{width:100%;border-collapse:collapse;font-size:12px}th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)}th{color:var(--dim)}
-code,.mono{color:var(--dim)}.key{font-family:monospace;background:#020a12;padding:6px 10px;border-radius:6px;color:var(--cyan);word-break:break-all}
-pre{background:#020a12;border:1px solid var(--line);border-radius:8px;padding:12px;overflow-x:auto;color:#cde}
-.err{color:var(--red)}.ok{color:var(--green)}.dim{color:var(--dim)}
+:root{--bg:#0b0e11;--panel:#12151a;--card:#1b1f26;--line:#2b3139;--gold:#fcd535;--gold2:#f0b90b;
+--txt:#eaecef;--dim:#848e9c;--green:#0ecb81;--red:#f6465d}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--txt);-webkit-font-smoothing:antialiased;
+font:15px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+a{color:var(--gold);text-decoration:none}a:hover{opacity:.85}
+nav{position:sticky;top:0;z-index:50;display:flex;justify-content:space-between;align-items:center;
+padding:14px 22px;background:rgba(11,14,17,.82);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.brand{font-weight:800;letter-spacing:3px;font-size:18px;color:#fff}
+.brand b{background:linear-gradient(90deg,var(--gold),#ff9d2f);-webkit-background-clip:text;background-clip:text;color:transparent}
+.navlinks{display:flex;gap:14px;align-items:center}.wrap{max-width:1040px;margin:0 auto;padding:0 22px}
+.btn{display:inline-block;border:0;border-radius:10px;padding:11px 20px;font:700 14px inherit;font-family:inherit;cursor:pointer;
+background:linear-gradient(90deg,var(--gold),var(--gold2));color:#11151a;transition:.15s}
+.btn:hover{box-shadow:0 6px 22px rgba(252,213,53,.25);transform:translateY(-1px)}
+.btn.ghost{background:transparent;color:var(--txt);border:1px solid var(--line)}
+.btn.ghost:hover{border-color:var(--gold);color:var(--gold);box-shadow:none}
+.btn.sm{padding:7px 13px;font-size:13px}.btn.block{display:block;width:100%;text-align:center;margin:8px 0}
+.hero{position:relative;padding:88px 0 56px;text-align:center;overflow:hidden}
+.hero::before{content:"";position:absolute;left:20%;right:20%;top:-120px;height:360px;
+background:radial-gradient(closest-side,rgba(252,213,53,.16),transparent);filter:blur(36px);z-index:0}
+.hero>.wrap{position:relative;z-index:1}
+.ey{color:var(--gold);font-weight:700;letter-spacing:3px;font-size:12px;text-transform:uppercase}
+.hero h1{font-size:46px;line-height:1.08;margin:14px 0;font-weight:800;color:#fff;letter-spacing:-.5px}
+.hero h1 .g{background:linear-gradient(90deg,#fcd535,#ff7a45);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{font-size:17px;color:var(--dim);max-width:680px;margin:0 auto 26px}
+.cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.grid{display:grid;gap:16px}.g3{grid-template-columns:repeat(3,1fr)}
+@media(max-width:760px){.g3{grid-template-columns:1fr}.hero h1{font-size:32px}}
+.sect{padding:42px 0}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px}
+.card h2{font-size:12px;letter-spacing:1.5px;color:var(--gold);text-transform:uppercase;margin:0 0 14px}
+.sect>.wrap>h2{font-size:13px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin:0 0 18px}
+.stat{text-align:center}.stat .v{font-size:34px;font-weight:800;color:var(--gold);line-height:1}
+.stat .k{color:var(--dim);font-size:13px;margin-top:8px}
+h1.pg{font-size:26px;color:#fff;margin:30px 0 8px}
+input{width:100%;margin:7px 0;background:#0e1116;color:var(--txt);border:1px solid var(--line);border-radius:10px;padding:12px;font-size:14px}
+input:focus{outline:0;border-color:var(--gold)}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:10px;border-bottom:1px solid var(--line)}
+th{color:var(--dim);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.5px}tr:hover td{background:rgba(255,255,255,.02)}
+pre{background:#0e1116;border:1px solid var(--line);border-radius:12px;padding:16px;overflow-x:auto;font-size:13px;color:#bfe}
+code,.mono,.key{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}code,.key{color:var(--gold)}.key{word-break:break-all}
+.feat{display:flex;gap:14px;align-items:flex-start}.feat .n{color:var(--gold);font-weight:800;font-size:22px;line-height:1}
+.pill{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600}
+.pill.ok{background:rgba(14,203,129,.13);color:var(--green)}.pill.warn{background:rgba(246,70,93,.13);color:var(--red)}
+.ok{color:var(--green)}.err{color:var(--red)}.dim{color:var(--dim)}
+footer{border-top:1px solid var(--line);padding:28px 0;color:var(--dim);font-size:13px;text-align:center;margin-top:30px}
 """
 
 def page(title, body, uid=None):
-    nav = (f'<a href="/dashboard">dashboard</a> &nbsp; <form method="post" action="/logout" style="display:inline">'
-           f'<button class="ghost">logout</button></form>') if uid else \
-          '<a href="/login">login</a> &nbsp; <a href="/signup">sign up</a>'
+    nav = ('<a href="/dashboard" class="btn ghost sm">Dashboard</a>'
+           '<form method="post" action="/logout" style="display:inline"><button class="btn ghost sm">Logout</button></form>') if uid else \
+          '<a href="/login" class="dim">Login</a><a href="/signup" class="btn sm">Get started</a>'
     return f"""<!doctype html><html><head><meta charset="utf-8"><title>APOCALYPSE — {title}</title>
-<meta name="viewport" content="width=device-width,initial-scale=1"><style>{CSS}</style></head><body><div class="wrap">
-<header><div class="logo">APO<b>CALYPSE</b></div><div>{nav}</div></header>{body}</div></body></html>"""
+<meta name="viewport" content="width=device-width,initial-scale=1"><style>{CSS}</style></head><body>
+<nav><a href="/" class="brand">APO<b>CALYPSE</b></a><div class="navlinks">{nav}</div></nav>
+{body}
+<footer>APOCALYPSE · the routing &amp; settlement hub for AI inference · BYOK · built on a live quality map</footer>
+</body></html>"""
 
 def landing(stats):
     return page("market-aware routing", f"""
-<h1>Stop picking your inference provider from the price list.</h1>
-<p class="dim">The same open model, served by competing providers, varies up to {stats['maxprice']}× in price,
-{stats['maxlat']}× in latency, and silently in quality. Bring your own key, point your app at us, and every
-request auto-routes to the cheapest provider that is quality-equivalent and healthy.</p>
-<div class="stats">
-  <div class="stat"><div class="v">{stats['save']}%</div><div class="k">median savings, equal quality</div></div>
-  <div class="stat"><div class="v">{stats['cells']}</div><div class="k">(model×task) cells measured</div></div>
-  <div class="stat"><div class="v">{stats['traps']}</div><div class="k">silent quality traps caught</div></div>
-</div>
-<div class="panel"><h2>get started</h2>
-<p><a href="/signup">Create an account</a> → save your OpenRouter key → change one line (<code>base_url</code>). BYOK: we never charge you for inference.</p></div>""")
+<section class="hero"><div class="wrap">
+  <div class="ey">// market-aware inference routing</div>
+  <h1>Stop picking your provider<br>from the <span class="g">price list.</span></h1>
+  <p>The same open model, across competing providers, varies up to {stats['maxprice']}× in price and
+  {stats['maxlat']}× in latency — and silently in quality. Bring your own key, point your app at us, and
+  every request auto-routes to the cheapest provider that is quality-equivalent and healthy.</p>
+  <div class="cta"><a href="/signup" class="btn">Get started — free</a><a href="#how" class="btn ghost">How it works</a></div>
+</div></section>
+
+<section class="sect"><div class="wrap"><div class="grid g3">
+  <div class="card stat"><div class="v">{stats['save']}%</div><div class="k">median savings at equal quality</div></div>
+  <div class="card stat"><div class="v">{stats['cells']}</div><div class="k">(model × task) cells measured</div></div>
+  <div class="card stat"><div class="v">{stats['traps']}</div><div class="k">silent quality traps caught</div></div>
+</div></div></section>
+
+<section class="sect" id="how"><div class="wrap"><h2>how it works</h2><div class="grid g3">
+  <div class="card feat"><div class="n">1</div><div><b>Bring your key</b><br>
+    <span class="dim">Save your OpenRouter key. We route with it — we never charge you for inference.</span></div></div>
+  <div class="card feat"><div class="n">2</div><div><b>Change one line</b><br>
+    <span class="dim">Point your OpenAI client's <code>base_url</code> at us. No SDK changes, no tagging.</span></div></div>
+  <div class="card feat"><div class="n">3</div><div><b>Route &amp; save</b><br>
+    <span class="dim">Every request goes to the cheapest quality-equivalent, healthy provider — with auto-fallback.</span></div></div>
+</div><div class="cta" style="margin-top:26px"><a href="/signup" class="btn">Create your account</a></div></div></section>""")
 
 def auth_form(kind, err=""):
     social = ""
     if oauth_on("github"):
-        social += '<a href="/auth/github"><button class="ghost" style="width:100%;margin:4px 0">Continue with GitHub</button></a>'
+        social += '<a href="/auth/github" class="btn ghost block">Continue with GitHub</a>'
     if oauth_on("google"):
-        social += '<a href="/auth/google"><button class="ghost" style="width:100%;margin:4px 0">Continue with Google</button></a>'
+        social += '<a href="/auth/google" class="btn ghost block">Continue with Google</a>'
     if social:
-        social = social + '<p class="dim" style="text-align:center;margin:10px 0">— or —</p>'
+        social += '<p class="dim" style="text-align:center;margin:14px 0">— or —</p>'
+    title = "Welcome back" if kind == "login" else "Create your account"
     return page(kind, f"""
-<div class="panel" style="max-width:420px;margin:40px auto"><h2>{kind}</h2>
+<div class="wrap"><div class="card" style="max-width:420px;margin:60px auto">
+<h1 class="pg" style="margin-top:0">{title}</h1>
 {'<p class="err">'+err+'</p>' if err else ''}
 {social}
 <form method="post" action="/{kind}">
-  <input name="email" type="email" placeholder="email" required>
-  <input name="pw" type="password" placeholder="password" required>
-  <button>{kind}</button>
+  <input name="email" type="email" placeholder="Email" required>
+  <input name="pw" type="password" placeholder="Password" required>
+  <button class="btn block">{'Log in' if kind=='login' else 'Sign up'}</button>
 </form>
-<p class="dim">{'No account? <a href="/signup">sign up</a>' if kind=='login' else 'Have an account? <a href="/login">login</a>'}</p></div>""")
+<p class="dim" style="margin-top:14px">{'New here? <a href="/signup">Create an account</a>' if kind=='login' else 'Have an account? <a href="/login">Log in</a>'}</p>
+</div></div>""")
 
 def dashboard(uid, base_url):
     u = db.get_user(uid)
@@ -158,10 +205,10 @@ def dashboard(uid, base_url):
     summ = db.usage_summary(uid)
     byok_set = bool(u["byok"])
     keyrows = "".join(
-        f'<tr><td class="key">{k["key"][:12]}…{k["key"][-4:]}</td><td>{k["label"]}</td>'
-        f'<td>{"revoked" if k["revoked"] else "active"}</td>'
-        f'<td><form method="post" action="/keys/revoke" style="display:inline">'
-        f'<input type="hidden" name="key" value="{k["key"]}"><button class="ghost">revoke</button></form></td></tr>'
+        f'<tr><td class="key">{k["key"][:14]}…{k["key"][-4:]}</td><td>{k["label"]}</td>'
+        f'<td><span class="pill {"warn" if k["revoked"] else "ok"}">{"revoked" if k["revoked"] else "active"}</span></td>'
+        f'<td style="text-align:right"><form method="post" action="/keys/revoke" style="display:inline">'
+        f'<input type="hidden" name="key" value="{k["key"]}"><button class="btn ghost sm">revoke</button></form></td></tr>'
         for k in keys) or '<tr><td colspan=4 class="dim">no keys yet</td></tr>'
     full_key = next((k["key"] for k in keys if not k["revoked"]), "YOUR_API_KEY")
     usagerows = "".join(
@@ -174,28 +221,34 @@ def dashboard(uid, base_url):
                f'    model="meta-llama/llama-3.3-70b-instruct",\n'
                f'    messages=[{{"role":"user","content":"What is 12*12?"}}])\n'
                f'print(r.choices[0].message.content)')
+    byok_status = ('<span class="pill ok">✓ key saved</span>' if byok_set
+                   else '<span class="pill warn">⚠ not set — required to route</span>')
     return page("dashboard", f"""
-<h1>Dashboard <span class="dim" style="font-size:13px">{u['email']}</span></h1>
-<div class="stats">
-  <div class="stat"><div class="v">{summ['requests']}</div><div class="k">requests routed</div></div>
-  <div class="stat"><div class="v">${summ['saved']:.4f}</div><div class="k">saved ({summ['saved_pct']}%)</div></div>
-  <div class="stat"><div class="v">${summ['spent']:.4f}</div><div class="k">your spend (your key)</div></div>
+<div class="wrap">
+<h1 class="pg">Dashboard <span class="dim" style="font-size:14px;font-weight:400">· {u['email']}</span></h1>
+<div class="grid g3" style="margin:18px 0">
+  <div class="card stat"><div class="v">{summ['requests']}</div><div class="k">requests routed</div></div>
+  <div class="card stat"><div class="v" style="color:var(--green)">${summ['saved']:.4f}</div><div class="k">saved ({summ['saved_pct']}%)</div></div>
+  <div class="card stat"><div class="v" style="color:#fff">${summ['spent']:.4f}</div><div class="k">your spend (your key)</div></div>
 </div>
 
-<div class="panel"><h2>1 · your OpenRouter key (BYOK)</h2>
-<p class="dim">We route with <b>your</b> key — we never charge you for inference. {'<span class="ok">✓ key saved</span>' if byok_set else '<span class="err">⚠ not set — required to route</span>'}</p>
-<form method="post" action="/byok"><input name="byok" type="password" placeholder="sk-or-v1-..."><button>save key</button></form></div>
+<div class="card" style="margin:16px 0"><h2>1 · Your OpenRouter key (BYOK) &nbsp; {byok_status}</h2>
+<p class="dim" style="margin-top:0">We route with <b>your</b> key — we never charge you for inference.</p>
+<form method="post" action="/byok" style="display:flex;gap:10px">
+  <input name="byok" type="password" placeholder="sk-or-v1-..." style="margin:0">
+  <button class="btn">Save key</button></form></div>
 
-<div class="panel"><h2>2 · your API keys</h2>
+<div class="card" style="margin:16px 0"><h2>2 · Your API keys</h2>
 <table><tr><th>key</th><th>label</th><th>status</th><th></th></tr>{keyrows}</table>
-<form method="post" action="/keys/new" style="margin-top:10px"><button>+ new API key</button></form></div>
+<form method="post" action="/keys/new" style="margin-top:14px"><button class="btn ghost sm">+ New API key</button></form></div>
 
-<div class="panel"><h2>3 · use it — change one line</h2>
+<div class="card" style="margin:16px 0"><h2>3 · Use it — change one line</h2>
 <pre>{snippet}</pre>
 <p class="dim">Or curl: <code>curl {base_url}/v1/chat/completions -H "Authorization: Bearer {full_key}" -d '{{"model":"...","messages":[...]}}'</code></p></div>
 
-<div class="panel"><h2>recent requests</h2>
-<table><tr><th>time</th><th>model</th><th>task</th><th>routed to</th><th>cost</th><th>saved</th></tr>{usagerows}</table></div>""", uid)
+<div class="card" style="margin:16px 0"><h2>Recent requests</h2>
+<table><tr><th>time</th><th>model</th><th>task</th><th>routed to</th><th>cost</th><th>saved</th></tr>{usagerows}</table></div>
+</div>""", uid)
 
 # ---------- landing stats (from the measured map) ----------
 def landing_stats():
