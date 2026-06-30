@@ -22,15 +22,15 @@ def _request(model, provider, body, stream, api_key=None):
         headers={"Authorization": f"Bearer {api_key or KEY}", "Content-Type": "application/json",
                  "HTTP-Referer": "https://localhost/mar", "X-Title": "mar-gateway"})
 
-def _plan(model, body, task):
+def _plan(model, body, task, prefs=None):
     task = resolve_task(model, body, task)        # auto-detect if untagged
-    p = build_policy(model, task=task)
+    p = build_policy(model, task=task, prefs=prefs)
     return p, ranked(p), task
 
-def complete(body, task=None, api_key=None):
+def complete(body, task=None, api_key=None, prefs=None):
     """Non-streaming with fallback. api_key = the customer's BYOK key (else server KEY).
-       Returns (response_dict, meta). Raises if all providers fail."""
-    model = body["model"]; p, order, task = _plan(model, body, task)
+       prefs = the customer's routing preferences. Returns (response_dict, meta)."""
+    model = body["model"]; p, order, task = _plan(model, body, task, prefs)
     tried = []
     for r in order[:MAX_TRIES]:
         tried.append(r["provider"])
@@ -48,10 +48,10 @@ def complete(body, task=None, api_key=None):
             continue
     raise RuntimeError(f"all {len(tried)} providers failed: {tried}")
 
-def stream(body, task, write, api_key=None):
+def stream(body, task, write, api_key=None, prefs=None):
     """Streaming with connect-time fallback. `write(bytes)` forwards SSE chunks. Returns meta.
        Fallback applies until the first byte; once forwarding begins we do not switch providers."""
-    model = body["model"]; p, order, task = _plan(model, body, task)
+    model = body["model"]; p, order, task = _plan(model, body, task, prefs)
     tried = []
     for r in order[:MAX_TRIES]:
         tried.append(r["provider"])

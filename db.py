@@ -35,6 +35,10 @@ def init():
         CREATE INDEX IF NOT EXISTS ix_usage_user ON usage(user_id);
         CREATE INDEX IF NOT EXISTS ix_keys_user ON api_keys(user_id);
         """)
+        try:
+            c.execute("ALTER TABLE users ADD COLUMN prefs TEXT")   # routing preferences (JSON)
+        except sqlite3.OperationalError:
+            pass  # already exists
 
 def _now():
     return time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
@@ -126,6 +130,19 @@ def get_user(uid):
 def set_byok(uid, key):
     with conn() as c:
         c.execute("UPDATE users SET byok=? WHERE id=?", (enc(key) if key else None, uid))
+
+# ---- routing preferences (per user) ----
+import json as _json
+def get_prefs(uid):
+    u = get_user(uid)
+    try:
+        return _json.loads(u["prefs"]) if u and u["prefs"] else {}
+    except Exception:
+        return {}
+
+def set_prefs(uid, prefs):
+    with conn() as c:
+        c.execute("UPDATE users SET prefs=? WHERE id=?", (_json.dumps(prefs), uid))
 
 def get_byok(uid):
     u = get_user(uid)

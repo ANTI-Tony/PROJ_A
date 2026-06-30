@@ -60,10 +60,20 @@ def latest_quality(model, task=None):
     pref = [f for f in files if "_math_" in f or "_hard_" in f]  # default: general reasoning signal
     return json.load(open((pref or files)[-1]))
 
-def build_policy(model, quality_floor_drop=0.05, min_avail=0.9, task=None):
-    """Merge measured quality with the policy thresholds.
-       quality_floor_drop: max acceptable accuracy drop vs the best measured provider.
-       min_avail: minimum measured availability to be routable."""
+DEFAULT_PREFS = {"floor_drop": 0.05, "min_avail": 0.9, "max_price": None,
+                 "exclude": [], "optimize": "cost"}   # optimize: 'cost' | 'latency'
+
+def _prefs(prefs):
+    p = dict(DEFAULT_PREFS); p.update({k: v for k, v in (prefs or {}).items() if v is not None})
+    return p
+
+def build_policy(model, quality_floor_drop=None, min_avail=None, task=None, prefs=None):
+    """Merge measured quality with the user's routing preferences.
+       prefs: floor_drop, min_avail, max_price ($/1M cap), exclude [providers], optimize."""
+    pf = _prefs(prefs)
+    floor_drop = quality_floor_drop if quality_floor_drop is not None else pf["floor_drop"]
+    min_av = min_avail if min_avail is not None else pf["min_avail"]
+    exclude = set(pf["exclude"] or []); max_price = pf["max_price"]
     q = latest_quality(model, task)
     if not q:
         # raise (not sys.exit): SystemExit bypasses `except Exception` in server handlers
@@ -71,33 +81,42 @@ def build_policy(model, quality_floor_drop=0.05, min_avail=0.9, task=None):
                          f"Run: python3 probe_quality.py {model} --task={task or 'math'}")
     rows = [r for r in q["results"] if r.get("accuracy") is not None and r.get("served", 0) >= 3]
     best = max(r["accuracy"] for r in rows)
-    floor = best - quality_floor_drop
+    floor = best - floor_drop
     live = _live_market().get(model, {})   # overlay FRESH price (quality stays from slow probes)
     for r in rows:
         lv = live.get(r["provider"])
         if lv and lv.get("price_1m"):
             r["price_1m"] = lv["price_1m"]; r["live"] = True
         r["equivalent"] = r["accuracy"] >= floor
-        r["healthy"] = (r.get("availability", 0) >= min_avail)
-        r["routable"] = r["equivalent"] and r["healthy"]
+        r["healthy"] = (r.get("availability", 0) >= min_av)
+        r["allowed"] = (r["provider"] not in exclude) and (max_price is None or r["price_1m"] <= max_price)
+        r["routable"] = r["equivalent"] and r["healthy"] and r["allowed"]
     return {"model": model, "measured_utc": q["utc"], "probe_set": q.get("probe_set"),
-            "best_acc": best, "floor": floor, "rows": rows}
+            "best_acc": best, "floor": floor, "rows": rows, "optimize": pf["optimize"]}
+
+def _rankkey(policy):
+    return (lambda r: r.get("mean_latency") or 1e9) if policy.get("optimize") == "latency" \
+           else (lambda r: r["price_1m"])
 
 def choose(policy):
+    key = _rankkey(policy)
     routable = [r for r in policy["rows"] if r["routable"]]
     if not routable:
-        # degrade gracefully: best healthy provider regardless of price
-        healthy = [r for r in policy["rows"] if r["healthy"]] or policy["rows"]
-        return max(healthy, key=lambda r: r["accuracy"]), "fallback(no quality-equivalent healthy endpoint)"
-    return min(routable, key=lambda r: r["price_1m"]), "cheapest quality-equivalent + healthy"
+        # degrade gracefully: best allowed+healthy provider regardless of the optimize metric
+        healthy = [r for r in policy["rows"] if r["healthy"] and r.get("allowed", True)] \
+                  or [r for r in policy["rows"] if r["healthy"]] or policy["rows"]
+        return max(healthy, key=lambda r: r["accuracy"]), "fallback(no quality-equivalent endpoint within prefs)"
+    why = "cheapest" if policy.get("optimize") != "latency" else "fastest"
+    return min(routable, key=key), f"{why} quality-equivalent + healthy (within your prefs)"
 
 def ranked(policy):
-    """Ordered fallback list: cheapest quality-equivalent+healthy first, then other healthy
-       by accuracy, then the rest by accuracy. The gateway tries these in order."""
-    rows = policy["rows"]
-    routable = sorted((r for r in rows if r["routable"]), key=lambda r: r["price_1m"])
-    healthy  = sorted((r for r in rows if r["healthy"] and not r["routable"]), key=lambda r: -r["accuracy"])
-    rest     = sorted((r for r in rows if not r["healthy"]), key=lambda r: -r["accuracy"])
+    """Ordered fallback list honoring the optimize metric and prefs; excluded providers go last."""
+    rows = policy["rows"]; key = _rankkey(policy)
+    routable = sorted((r for r in rows if r["routable"]), key=key)
+    healthy  = sorted((r for r in rows if r["healthy"] and r.get("allowed", True) and not r["routable"]),
+                      key=lambda r: -r["accuracy"])
+    rest     = sorted((r for r in rows if not (r["healthy"] and r.get("allowed", True))),
+                      key=lambda r: -r["accuracy"])
     seen, out = set(), []
     for r in (*routable, *healthy, *rest):
         if r["provider"] not in seen:

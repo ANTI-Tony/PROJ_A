@@ -137,6 +137,10 @@ code,.mono,.key{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}code,.ke
 .pill{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600}
 .pill.ok{background:rgba(14,203,129,.13);color:var(--green)}.pill.warn{background:rgba(246,70,93,.13);color:var(--red)}
 .ok{color:var(--green)}.err{color:var(--red)}.dim{color:var(--dim)}
+select{width:100%;background:#0e1116;color:var(--txt);border:1px solid var(--line);border-radius:10px;padding:11px;font-size:14px}
+.rad{display:block;margin:6px 0;color:var(--txt);font-size:14px;cursor:pointer}
+.chks{display:flex;flex-wrap:wrap;gap:8px}
+.chk{display:inline-flex;align-items:center;gap:6px;font-size:13px;background:#0e1116;border:1px solid var(--line);border-radius:8px;padding:6px 10px;cursor:pointer}
 footer{border-top:1px solid var(--line);padding:28px 0;color:var(--dim);font-size:13px;text-align:center;margin-top:30px}
 """
 
@@ -223,6 +227,30 @@ def dashboard(uid, base_url):
                f'print(r.choices[0].message.content)')
     byok_status = ('<span class="pill ok">✓ key saved</span>' if byok_set
                    else '<span class="pill warn">⚠ not set — required to route</span>')
+    # routing preferences
+    pf = db.get_prefs(uid); opt = pf.get("optimize", "cost"); fd = pf.get("floor_drop", 0.05)
+    mp = pf.get("max_price"); excl = set(pf.get("exclude", []))
+    fopts = "".join(f'<option value="{v}" {"selected" if abs(fd-v)<1e-6 else ""}>{lbl}</option>'
+                    for v, lbl in [(0.02, "Strict — within 2% of best"),
+                                   (0.05, "Balanced — within 5% (default)"),
+                                   (0.10, "Aggressive — within 10%")])
+    provboxes = "".join(
+        f'<label class="chk"><input type="checkbox" name="exclude" value="{p}" {"checked" if p in excl else ""}> {p}</label>'
+        for p in providers_list())
+    prefs_card = f"""
+<div class="card" style="margin:16px 0"><h2>4 · Routing preferences</h2>
+<form method="post" action="/prefs">
+  <div class="grid g3" style="gap:14px">
+    <div><label>Optimize for</label><br>
+      <label class="rad"><input type="radio" name="optimize" value="cost" {"checked" if opt!="latency" else ""}> Lowest cost</label>
+      <label class="rad"><input type="radio" name="optimize" value="latency" {"checked" if opt=="latency" else ""}> Lowest latency</label></div>
+    <div><label>Quality floor</label><select name="floor_drop">{fopts}</select></div>
+    <div><label>Max price ($/1M, optional)</label><input name="max_price" type="number" step="0.001" placeholder="no cap" value="{mp if mp is not None else ''}" style="margin:0"></div>
+  </div>
+  <label style="display:block;margin:14px 0 6px">Exclude providers</label>
+  <div class="chks">{provboxes or '<span class="dim">no providers measured yet</span>'}</div>
+  <button class="btn" style="margin-top:14px">Save preferences</button>
+</form></div>"""
     return page("dashboard", f"""
 <div class="wrap">
 <h1 class="pg">Dashboard <span class="dim" style="font-size:14px;font-weight:400">· {u['email']}</span></h1>
@@ -245,6 +273,8 @@ def dashboard(uid, base_url):
 <div class="card" style="margin:16px 0"><h2>3 · Use it — change one line</h2>
 <pre>{snippet}</pre>
 <p class="dim">Or curl: <code>curl {base_url}/v1/chat/completions -H "Authorization: Bearer {full_key}" -d '{{"model":"...","messages":[...]}}'</code></p></div>
+
+{prefs_card}
 
 <div class="card" style="margin:16px 0"><h2>Recent requests</h2>
 <table><tr><th>time</th><th>model</th><th>task</th><th>routed to</th><th>cost</th><th>saved</th></tr>{usagerows}</table></div>
@@ -269,6 +299,17 @@ def landing_stats():
     med = sorted(saves)[len(saves)//2] if saves else 0
     return {"save": round(med*100), "cells": cells, "traps": traps,
             "maxprice": round(max(px), 1), "maxlat": round(max(lx))}
+
+def providers_list():
+    try:
+        m = json.load(open(os.path.join(os.path.dirname(__file__), "data", "quality_map.json")))
+    except Exception:
+        return []
+    s = set()
+    for model in m:
+        for task in m[model]:
+            s.update(m[model][task].keys())
+    return sorted(s)
 
 # ---------- HTTP ----------
 class H(BaseHTTPRequestHandler):
@@ -375,6 +416,16 @@ class H(BaseHTTPRequestHandler):
         if not uid:
             return self._redirect("/login")
         f = self._form()
+        if p == "/prefs":
+            mp = f.get("max_price", [""])[0].strip()
+            try: floor = float(f.get("floor_drop", ["0.05"])[0])
+            except ValueError: floor = 0.05
+            db.set_prefs(uid, {
+                "optimize": "latency" if f.get("optimize", ["cost"])[0] == "latency" else "cost",
+                "floor_drop": min(max(floor, 0.0), 0.5),
+                "max_price": (float(mp) if mp else None),
+                "exclude": f.get("exclude", [])})
+            return self._redirect("/dashboard")
         if p == "/byok":
             db.set_byok(uid, f.get("byok", [""])[0].strip()); return self._redirect("/dashboard")
         if p == "/keys/new":
@@ -398,17 +449,18 @@ class H(BaseHTTPRequestHandler):
         except Exception:
             return self._json(400, {"error": "bad json"})
         task = body.pop("task", None) or self.headers.get("X-MAR-Task")
+        prefs = db.get_prefs(uid)
         if body.get("stream"):
             self.send_response(200); self.send_header("Content-Type", "text/event-stream")
             self.send_header("Cache-Control", "no-cache"); self.end_headers()
             try:
-                gateway.stream(body, task, self.wfile.write, api_key=byok)
+                gateway.stream(body, task, self.wfile.write, api_key=byok, prefs=prefs)
             except Exception as e:
                 try: self.wfile.write(f"data: {json.dumps({'error': str(e)})}\n\n".encode())
                 except Exception: pass
             return
         try:
-            d, meta = gateway.complete(body, task, api_key=byok)
+            d, meta = gateway.complete(body, task, api_key=byok, prefs=prefs)
             cf = meta["cost"] * (meta["premium_price"]/meta["price"] if meta["price"] else 1)
             db.log_usage(uid, body.get("model", "?"), meta["provider"], meta["task"],
                          meta["cost"], cf, meta["latency"], meta["fallbacks"])
